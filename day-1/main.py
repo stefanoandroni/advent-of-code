@@ -9,7 +9,6 @@ def main():
         print(max_val) # Part 1
         print(sum(maxN(sum_list, 3))) # Part 2
 
-
 def maxN(elements, n):
     return sorted(elements, reverse=True)[:n]
 
