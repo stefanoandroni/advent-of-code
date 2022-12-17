@@ -1,7 +1,7 @@
 
 import re
 
-INPUT_FILE_PATH = '../input.txt'
+INPUT_FILE_PATH = 'data/input.txt'
 
 min_val = 1 # 1
 max_val = 99 # 10
@@ -30,8 +30,8 @@ def main():
             # print(render_interval(i2), i2_str)
             # print()
         
-        print(f"{issubset_count = }") # Part 1
-        print(f"{intersect_count = }") # Part 2
+        print(f"{issubset_count = }") # <Part 1>
+        print(f"{intersect_count = }") # <Part 2>
 
 def render_interval(interval):
     interval_str = ""
@@ -44,7 +44,7 @@ def render_interval(interval):
 
 def get_interval(str):
     interval = str.split("-")
-    return set (range(int(interval[0]), int(interval[1])+1))
+    return set(range(int(interval[0]), int(interval[1])+1))
 
 if __name__ == "__main__":
     main()

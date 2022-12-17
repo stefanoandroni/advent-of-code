@@ -1,13 +1,13 @@
 from enum import Enum
 
-INPUT_FILE_PATH = '../input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
         list = [x.split(" ") for x in f.read().split("\n")]
         round_list = get_round_list(list)
         score_list = [get_score(x) for x in round_list]
-        print(sum(score_list)) # Part 2
+        print(sum(score_list)) # <Part 2>
 
 def get_round_list(list):
     for x in list:

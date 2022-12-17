@@ -1,6 +1,6 @@
 import re
 
-INPUT_FILE_PATH = '../input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
@@ -16,7 +16,7 @@ def main():
         # print(stacks_movies_applied_list)
         
         top_items = get_top_items_string(stacks_movies_applied_list)
-        print(top_items) # Part 1
+        print(top_items) # <Part 1>
 
 def get_top_items_string(stacks_list):
     top_items_string = ""

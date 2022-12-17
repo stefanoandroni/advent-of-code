@@ -1,6 +1,6 @@
 # not optimized algorithms (use tree)
 
-INPUT_FILE_PATH = 'input.txt'
+INPUT_FILE_PATH = 'data/input.txt'
 
 TOTAL_SPACE = 70_000_000
 UPDATE_SIZE = 30_000_000
@@ -56,7 +56,7 @@ def main():
         path_total_size_at_most_10000 = [path for path in total_size_per_path if path['total-size'] <= 100_000]
         # print(*path_total_size_at_most_10000, sep = "\n")
 
-        print(sum([path['total-size'] for path in path_total_size_at_most_10000])) # Part 1
+        print(sum([path['total-size'] for path in path_total_size_at_most_10000])) # <Part 1>
 
         # Part 2 --------------------------------------------------------------------------------------------------------------------
         
@@ -69,19 +69,13 @@ def main():
         space_to_free = UPDATE_SIZE - free_space
         # print(space_to_free)
 
-        # get dirs whith total-size >= space_to_free
+        # get dirs whit total-size >= space_to_free
         candidate_dirs = [path for path in total_size_per_path if path['total-size'] >= space_to_free]
 
         # sort candidate dirs by size and get first
         candidate_dir = sorted(candidate_dirs, key=lambda x: x['total-size'])[0]
         
-        print(candidate_dir['total-size']) # Part 2
-
-
-
-
-        
-
+        print(candidate_dir['total-size']) # <Part 2>
 
 if __name__ == "__main__":
     main()

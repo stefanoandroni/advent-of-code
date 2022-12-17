@@ -1,5 +1,5 @@
 
-INPUT_FILE_PATH = '../input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
@@ -14,7 +14,7 @@ def main():
         # print(get_priority("a"))
         # print(get_priority("z"))
 
-        print(sum(priority_common_item_list)) # Part 1
+        print(sum(priority_common_item_list)) # <Part 1>
 
 def get_priority(char):
     # a .. z from 1 to 26

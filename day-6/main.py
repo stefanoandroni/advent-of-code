@@ -1,6 +1,6 @@
 
-INPUT_FILE_PATH = 'input.txt'
-# INPUT_FILE_PATH = 'test-input.txt'
+INPUT_FILE_PATH = 'data/input.txt'
+# INPUT_FILE_PATH = 'data/test-input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
@@ -10,10 +10,10 @@ def main():
         # signal = signal.split("\n")[test_index]
 
         start_of_packet_marker_index = find_start_of_packet_index(signal, 4)
-        print(start_of_packet_marker_index) # Part 1
+        print(start_of_packet_marker_index) # <Part 1>
 
         start_of_packet_marker_index = find_start_of_packet_index(signal, 14)
-        print(start_of_packet_marker_index) # Part 2
+        print(start_of_packet_marker_index) # <Part 2>
 
 def find_start_of_packet_index(string, window_length):  # TODO Not Optimized Alghoritm
     # window_length = 4

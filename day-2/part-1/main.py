@@ -1,12 +1,12 @@
 from enum import Enum
 
-INPUT_FILE_PATH = '../input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
         round_list = [x.split(" ") for x in f.read().split("\n")]
         score_list = [get_score(x) for x in round_list]
-        print(sum(score_list)) # Part 1
+        print(sum(score_list)) # <Part 1>
 
 def get_score(round):
     opponent_shape = get_shape(round[0])

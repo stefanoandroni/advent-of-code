@@ -1,6 +1,6 @@
 import re
 
-INPUT_FILE_PATH = '../input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
@@ -16,7 +16,7 @@ def main():
         # print(stacks_movies_applied_list)
         
         top_items = get_top_items_string(stacks_movies_applied_list)
-        print(top_items) # Part 2
+        print(top_items) # <Part 2>
 
 def get_top_items_string(stacks_list):
     top_items_string = ""
@@ -50,7 +50,6 @@ def create_moves(moves_body):
         obj['from'] = int(tmp_list[1])
         obj['to'] = int(tmp_list[2])
         list.append(obj)
-
     return list
 
 def create_stacks(stacks_body):

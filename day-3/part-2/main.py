@@ -1,5 +1,5 @@
 
-INPUT_FILE_PATH = '../input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
@@ -10,7 +10,7 @@ def main():
         
         priority_common_group_list = [get_priority(x) for x in group_badge_list]
 
-        print(sum(priority_common_group_list)) # Part 2
+        print(sum(priority_common_group_list)) # <Part 2>
 
 def get_common_item(str1, str2, str3):
     str1_set = set(str1)
