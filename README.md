@@ -9,6 +9,6 @@
 
 <h2>Years</h2>
 <ul>
-  <li> 2022 </li>
+  <li><a href="/2022">2022</a></li>
 </ul>
   
