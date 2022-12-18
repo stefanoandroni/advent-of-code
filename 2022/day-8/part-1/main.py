@@ -13,16 +13,17 @@ def main():
 
         for r in range(l):
             for c in range(l):
-                if r in {0, l-1} or c in {0, l-1}:
-                    vis_matrix[r][c] = True 
-                else:
-                    vis_matrix[r][c] = check_visibility(r, c, matrix)
+                vis_matrix[r][c] = check_visibility(r, c, matrix)
         # print(*vis_matrix, sep = "\n") 
 
         visible_count = count_true_in_matrix(vis_matrix)
         print(visible_count) # <Part 1>
 
 def check_visibility(r, c, matrix):
+    l = len(matrix)
+    if r in {0, l-1} or c in {0, l-1}:
+        return True
+    
     return (
         check_direction_visibility(r, c, Directions.LEFT, matrix[r][c], matrix) or 
         check_direction_visibility(r, c, Directions.RIGHT, matrix[r][c], matrix) or
