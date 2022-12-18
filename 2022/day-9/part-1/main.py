@@ -2,7 +2,7 @@ from math import sqrt
 
 # TODO: work with vector!
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
@@ -20,14 +20,16 @@ def main():
             head_pos, tail_pos = make_move(head_pos, tail_pos, move) 
 
         tail_pos_set = {tuple(x) for x in tail_pos_list}
+        # print_visited_matrix(tail_pos_set)
         print(len(tail_pos_set)) # <Part 1>
 
 def make_move(head_pos, tail_pos, move):
-    dir = move[0]
-    steps = move[1]
+    dir = move[0] # direction
+    steps = move[1] # steps
 
     for i in range(steps):
         head_pos, tail_pos = make_one_step_move(head_pos, tail_pos, dir)
+        # print_matrix(head_pos, tail_pos)
         tail_pos_list.append(tail_pos)  
 
     return head_pos, tail_pos
@@ -83,6 +85,53 @@ class Directions:
     DOWN = 'D'
     LEFT = 'L'
     RIGHT = 'R'
+
+def print_matrix(head_pos, tail_pos):
+    # harcoded matrix
+    # with 'input-test.txt'
+    matrix = [
+        [".",".",".",".",".","."],
+        [".",".",".",".",".","."],
+        [".",".",".",".",".","."],
+        [".",".",".",".",".","."],
+        [".",".",".",".",".","."],
+    ]
+    start_pos = [len(matrix) - 1, 0] 
+
+    # axis translation
+    head_pos = [head_pos[0] + start_pos[0], head_pos[1] + start_pos[1]]
+    tail_pos = [tail_pos[0] + start_pos[0], tail_pos[1] + start_pos[1]]
+
+    matrix[start_pos[0]][start_pos[1]] = "s"
+    matrix[tail_pos[0]][tail_pos[1]] = "T"
+    matrix[head_pos[0]][head_pos[1]] = "H"
+
+    # print
+    print("-" * 10)
+    for line in matrix:
+        print("".join(line))
+
+def print_visited_matrix(visited_pos_set):
+    # harcoded matrix
+    # with 'input-test.txt'
+    matrix = [
+        [".",".",".",".",".","."],
+        [".",".",".",".",".","."],
+        [".",".",".",".",".","."],
+        [".",".",".",".",".","."],
+        [".",".",".",".",".","."],
+    ]
+    start_pos = [len(matrix) - 1, 0] 
+
+    for pos in visited_pos_set:
+        matrix[pos[0] + start_pos[0]][pos[1] + start_pos[1]] = "#"
+    
+    matrix[start_pos[0]][start_pos[1]] = "s"
+
+    # print
+    print("_" * 10)
+    for line in matrix:
+        print("".join(line))
 
 if __name__ == "__main__":
     main()
