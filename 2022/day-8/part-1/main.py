@@ -1,16 +1,14 @@
-# not optimized (bad implementation) (TODO - recursive - if vis_matrix[r][c]=True and matrix[r][c]<val: return True)
+# not optimized (bad implementation) (TODO - recursive - if vis_matrix[r][c]=True and matrix[r][c]<current_val: return True)
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
-
-        matrix = get_matrix_from_file(f) # data_matrix
+        matrix = get_matrix_from_file(f) # data matrix
         # print(*matrix, sep = "\n") 
-        
         l = len(matrix)
 
-        vis_matrix = [[False for _ in range(l)] for _ in range(l)] # visibility_matrix (False by default)
+        vis_matrix = [[False for _ in range(l)] for _ in range(l)] # visibility matrix (False by default)
         # print(*vis_matrix, sep = "\n") 
 
         for r in range(l):
@@ -19,7 +17,6 @@ def main():
                     vis_matrix[r][c] = True 
                 else:
                     vis_matrix[r][c] = check_visibility(r, c, matrix)
-        
         # print(*vis_matrix, sep = "\n") 
 
         visible_count = count_true_in_matrix(vis_matrix)
@@ -35,7 +32,6 @@ def check_visibility(r, c, matrix):
 
 def check_visibility_direction(r, c, dir, val, matrix):
     l = len(matrix)
-
     match dir:
         case Directions.UP:
             r = r-1
@@ -45,7 +41,6 @@ def check_visibility_direction(r, c, dir, val, matrix):
             c = c-1
         case Directions.RIGHT:
             c = c+1
-
     if 0 <= r < l and 0 <= c < l:
         if matrix[r][c] < val:
             return check_visibility_direction(r, c, dir, val, matrix)
