@@ -7,11 +7,9 @@ INPUT_FILE_PATH = '../data/input.txt'
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
         global tail_pos_list
-
         tail_pos_list = []
 
         moves = get_moves_from_file(f)
-        # print(moves)
         
         starting_pos = [0,0]
         head_pos = starting_pos.copy()
