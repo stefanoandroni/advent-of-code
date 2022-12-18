@@ -24,13 +24,13 @@ def main():
 
 def check_visibility(r, c, matrix):
     return (
-        check_visibility_direction(r, c, Directions.LEFT, matrix[r][c], matrix) or 
-        check_visibility_direction(r, c, Directions.RIGHT, matrix[r][c], matrix) or
-        check_visibility_direction(r, c, Directions.UP, matrix[r][c], matrix) or
-        check_visibility_direction(r, c, Directions.DOWN, matrix[r][c], matrix)
+        check_direction_visibility(r, c, Directions.LEFT, matrix[r][c], matrix) or 
+        check_direction_visibility(r, c, Directions.RIGHT, matrix[r][c], matrix) or
+        check_direction_visibility(r, c, Directions.UP, matrix[r][c], matrix) or
+        check_direction_visibility(r, c, Directions.DOWN, matrix[r][c], matrix)
         )
 
-def check_visibility_direction(r, c, dir, val, matrix):
+def check_direction_visibility(r, c, dir, val, matrix):
     l = len(matrix)
     match dir:
         case Directions.UP:
@@ -43,7 +43,7 @@ def check_visibility_direction(r, c, dir, val, matrix):
             c = c+1
     if 0 <= r < l and 0 <= c < l:
         if matrix[r][c] < val:
-            return check_visibility_direction(r, c, dir, val, matrix)
+            return check_direction_visibility(r, c, dir, val, matrix)
         return False
     else:
         return True # visibility has reached the edge

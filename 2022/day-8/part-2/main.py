@@ -23,13 +23,13 @@ def main():
 def get_score(r, c, matrix):
     # score_direction -> viewing_distance
     return (
-        get_score_direction(r, c, Directions.LEFT, matrix[r][c], matrix, 0) *
-        get_score_direction(r, c, Directions.RIGHT, matrix[r][c], matrix, 0) *
-        get_score_direction(r, c, Directions.UP, matrix[r][c], matrix, 0) *
-        get_score_direction(r, c, Directions.DOWN, matrix[r][c], matrix, 0)
+        get_direction_score(r, c, Directions.LEFT, matrix[r][c], matrix, 0) *
+        get_direction_score(r, c, Directions.RIGHT, matrix[r][c], matrix, 0) *
+        get_direction_score(r, c, Directions.UP, matrix[r][c], matrix, 0) *
+        get_direction_score(r, c, Directions.DOWN, matrix[r][c], matrix, 0)
         )
 
-def get_score_direction(r, c, dir, val, matrix, score):
+def get_direction_score(r, c, dir, val, matrix, score):
     l = len(matrix)
     match dir:
         case Directions.UP:
@@ -44,7 +44,7 @@ def get_score_direction(r, c, dir, val, matrix, score):
     if 0 <= r < l and 0 <= c < l:
         score += 1
         if matrix[r][c] < val:
-            return get_score_direction(r, c, dir, val, matrix, score)
+            return get_direction_score(r, c, dir, val, matrix, score)
         else:
             return score # CB 2
     return score # CB 1
