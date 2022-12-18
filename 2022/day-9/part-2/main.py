@@ -2,7 +2,7 @@ from math import sqrt
 
 # TODO: work with vector!
 
-INPUT_FILE_PATH = '../data/test-input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
@@ -15,14 +15,15 @@ def main():
         
         starting_pos = [0,0]
         head_pos = starting_pos.copy()
-        tail_pos = starting_pos.copy()
+        tail_pos = [starting_pos.copy() for _ in range(9)]
 
         for move in moves:
             head_pos, tail_pos = make_move(head_pos, tail_pos, move) 
+            # print_matrix(head_pos, tail_pos)
 
         tail_pos_set = {tuple(x) for x in tail_pos_list}
-        print_visited_matrix(tail_pos_set)
-        # print(len(tail_pos_set)) # <Part 1>
+        # print_visited_matrix(tail_pos_set)
+        print(len(tail_pos_set)) # <Part 2>
 
 def make_move(head_pos, tail_pos, move):
     dir = move[0] # direction
@@ -30,9 +31,7 @@ def make_move(head_pos, tail_pos, move):
 
     for i in range(steps):
         head_pos, tail_pos = make_one_step_move(head_pos, tail_pos, dir)
-        print_matrix(head_pos, tail_pos)
-        tail_pos_list.append(tail_pos)  
-
+        tail_pos_list.append(tail_pos[len(tail_pos)-1]) # (not optimal) added to each step (even when it doesn't change)  
     return head_pos, tail_pos
 
 def make_one_step_move(head_pos, tail_pos, dir):
@@ -46,27 +45,33 @@ def make_one_step_move(head_pos, tail_pos, dir):
         case Directions.RIGHT:
             head_pos[1] += 1
 
-    if not is_adjacent(head_pos, tail_pos): # update tail_pos
-        tail_pos = update_tail_pos(head_pos, tail_pos)
+    # TODO refactor
+    if not is_adjacent(head_pos, tail_pos[0]):
+        tail_pos[0] = update_tail_pos(head_pos, tail_pos[0])
+
+        i = 0
+        while i + 1 < len(tail_pos) and not is_adjacent(tail_pos[i], tail_pos[i+1]):
+            tail_pos[i+1] = update_tail_pos(tail_pos[i], tail_pos[i+1])
+            i += 1
 
     return head_pos, tail_pos
 
-def update_tail_pos(head_pos, tail_pos):
-    x1, y1 = head_pos
-    x2, y2 = tail_pos
+def update_tail_pos(pos_1, pos_2): #pos_2 -> pos to update
+    x1, y1 = pos_1
+    x2, y2 = pos_2
 
-    y_dif = y2 - y1
-    if y_dif != 0:
-        if y_dif > 0:
+    delta_y = y2 - y1
+    if delta_y != 0:
+        if delta_y > 0:
             y2 -= 1
-        else: # y_dif < 0
+        else: # delta_y < 0
             y2 += 1
     
-    x_dif = x2 - x1
-    if x_dif != 0:
-        if x_dif > 0:
+    delta_x = x2 - x1
+    if delta_x != 0:
+        if delta_x > 0:
             x2 -= 1
-        else: # x_dif < 0
+        else: # delta_x < 0
             x2 += 1
 
     return [x2, y2]
@@ -89,40 +94,35 @@ class Directions:
 
 def print_matrix(head_pos, tail_pos):
     # harcoded matrix
-    # with 'input-test.txt'
-    matrix = [
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-    ]
-    start_pos = [len(matrix) - 1, 0] 
+    # with 'input-test-2.txt' 
+    matrix = [ ["." for _ in range(26)] for _ in range(21)]
+
+    # start_pos = [len(matrix) - 1, 0]
+    start_pos = [15,11] 
 
     # axis translation
     head_pos = [head_pos[0] + start_pos[0], head_pos[1] + start_pos[1]]
-    tail_pos = [tail_pos[0] + start_pos[0], tail_pos[1] + start_pos[1]]
+    tail_pos = [[tail[0] + start_pos[0], tail[1] + start_pos[1]] for tail in tail_pos]
 
     matrix[start_pos[0]][start_pos[1]] = "s"
-    matrix[tail_pos[0]][tail_pos[1]] = "T"
-    matrix[head_pos[0]][head_pos[1]] = "H"
 
+    for i, item in reversed(list(enumerate(tail_pos))):
+        matrix[item[0]][item[1]] = str(i+1)
+
+    matrix[head_pos[0]][head_pos[1]] = "H"
+    
     # print
-    print("-" * 10)
+    print("-" * 30)
     for line in matrix:
         print("".join(line))
 
 def print_visited_matrix(visited_pos_set):
     # harcoded matrix
-    # with 'input-test.txt'
-    matrix = [
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-    ]
-    start_pos = [len(matrix) - 1, 0] 
+    # with 'input-test-2.txt' 
+    matrix = [ ["." for _ in range(26)] for _ in range(21)]
+
+    # start_pos = [len(matrix) - 1, 0]
+    start_pos = [15,11] 
 
     for pos in visited_pos_set:
         matrix[pos[0] + start_pos[0]][pos[1] + start_pos[1]] = "#"
@@ -130,7 +130,7 @@ def print_visited_matrix(visited_pos_set):
     matrix[start_pos[0]][start_pos[1]] = "s"
 
     # print
-    print("_" * 10)
+    print("_" * 30)
     for line in matrix:
         print("".join(line))
 

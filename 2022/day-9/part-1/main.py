@@ -54,18 +54,18 @@ def update_tail_pos(head_pos, tail_pos):
     x1, y1 = head_pos
     x2, y2 = tail_pos
 
-    y_dif = y2 - y1
-    if y_dif != 0:
-        if y_dif > 0:
+    delta_y = y2 - y1
+    if delta_y != 0: 
+        if delta_y > 0:
             y2 -= 1
-        else: # y_dif < 0
+        else: # delta_y < 0
             y2 += 1
     
-    x_dif = x2 - x1
-    if x_dif != 0:
-        if x_dif > 0:
+    delta_x = x2 - x1
+    if delta_x != 0:
+        if delta_x > 0:
             x2 -= 1
-        else: # x_dif < 0
+        else: # delta_x < 0
             x2 += 1
 
     return [x2, y2]
@@ -89,13 +89,8 @@ class Directions:
 def print_matrix(head_pos, tail_pos):
     # harcoded matrix
     # with 'input-test.txt'
-    matrix = [
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-        [".",".",".",".",".","."],
-    ]
+    matrix = [ ["." for _ in range(6)] for _ in range(5)]
+
     start_pos = [len(matrix) - 1, 0] 
 
     # axis translation
