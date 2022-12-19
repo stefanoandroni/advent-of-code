@@ -1,6 +1,11 @@
 import re
 
-INPUT_FILE_PATH = 'data/test-input.txt'
+# Assumptions
+# > the monkey's id matches the index of its location in the file
+
+INPUT_FILE_PATH = 'data/input.txt'
+
+ROUNDS = 20
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
@@ -8,21 +13,42 @@ def main():
 
     monkeys = parse_file(file)
 
-    for monkey in monkeys:
-        for item in monkey.items:
-            # Operation on worry level # TODO make function
-            old = item
-            new = eval(monkey.operation)
-            worry_level = new
-            # Divide worry level
-            worry_level //= 3
-            # Test to select the receiving monkey
-            receiving_monkey = monkey.if_true if worry_level % monkey.divisor == 0 else monkey.if_false
-            
-            # HERE!
-            # remove item from current
-            # append item from receiving
+    monkeys_inspect_item_count = [0 for _ in range(len(monkeys))]
 
+    for round in range(ROUNDS):
+        for monkey in monkeys:
+            for item in monkey.items.copy():
+                # Get new worry level (Operation on item) 
+                worry_level = get_new_worry_level(item, monkey.operation)
+                # Update worry level
+                worry_level //= 3
+                # Test to select the receiving monkey
+                receiving_monkey = monkey.if_true if worry_level % monkey.divisor == 0 else monkey.if_false
+                # Throw object at monkey 'receiving_monkey'
+                monkey.items.remove(item)
+                monkeys[receiving_monkey].items.append(worry_level)
+
+                monkeys_inspect_item_count[monkey.id] += 1
+
+        # print()
+        # print("ROUND ", round + 1, " -"*20)
+        # print("Monkey 0:", monkeys[0].items)
+        # print("Monkey 1:", monkeys[1].items)
+        # print("Monkey 2:", monkeys[2].items)
+        # print("Monkey 3:", monkeys[3].items)
+
+    print(get_monkey_business_level(monkeys_inspect_item_count)) # <Part 1>
+
+def get_monkey_business_level(count_list):
+    max1 = max(count_list)
+    count_list.remove(max1)
+    max2 = max(count_list)
+    return max1 * max2
+
+def get_new_worry_level(item, operation):
+    old = item
+    new = eval(operation)
+    return new
 
 def parse_file(file): # bad function
     monkeys = file.split('\n\n')
