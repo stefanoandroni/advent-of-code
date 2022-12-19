@@ -93,7 +93,7 @@ class Directions:
 
 def print_matrix(head_pos, tail_pos):
     # harcoded matrix
-    # with 'input-test-2.txt' 
+    # works with 'input-test-2.txt' 
     matrix = [ ["." for _ in range(26)] for _ in range(21)]
 
     # start_pos = [len(matrix) - 1, 0]
@@ -117,7 +117,7 @@ def print_matrix(head_pos, tail_pos):
 
 def print_visited_matrix(visited_pos_set):
     # harcoded matrix
-    # with 'input-test-2.txt' 
+    # works with 'input-test-2.txt' 
     matrix = [ ["." for _ in range(26)] for _ in range(21)]
 
     # start_pos = [len(matrix) - 1, 0]
