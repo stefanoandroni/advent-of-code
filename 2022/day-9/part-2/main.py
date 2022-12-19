@@ -47,6 +47,7 @@ def make_one_step_move(head_pos, tail_pos, dir):
     if not is_adjacent(head_pos, tail_pos[0]):
         tail_pos[0] = update_tail_pos(head_pos, tail_pos[0])
 
+        # TODO (?) is the while loop useful? or it would suffice to simply move each Tail to the position of the next Tail in the list
         i = 0
         while i + 1 < len(tail_pos) and not is_adjacent(tail_pos[i], tail_pos[i+1]):
             tail_pos[i+1] = update_tail_pos(tail_pos[i], tail_pos[i+1])
