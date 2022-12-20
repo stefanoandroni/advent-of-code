@@ -17,7 +17,7 @@ def main():
 
     monkeys_inspect_item_count = [0 for _ in range(len(monkeys))]
 
-    LCM = 1 # Least Common Multiple (of prime numbers)
+    LCM = 1 # Least Common Multiple (of different prime numbers)
     for monkey in monkeys:
         LCM *= monkey.divisor
 
