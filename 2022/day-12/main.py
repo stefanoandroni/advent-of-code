@@ -12,7 +12,7 @@ INPUT_FILE_PATH = 'data/input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
-        global matrix, target_pos
+        global matrix
 
         matrix, starting_node, target_node = get_matrix_from_file(f)
         # print(*matrix, sep='\n')
