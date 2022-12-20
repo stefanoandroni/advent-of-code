@@ -3,7 +3,7 @@ import re
 # Assumptions
 # > the monkey's id matches the index of its location in the file
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 ROUNDS = 20
 
@@ -18,7 +18,7 @@ def main():
     for round in range(ROUNDS):
         for monkey in monkeys:
             for item in monkey.items.copy():
-                # Get new worry level (Operation on item) 
+                # Get new worry level (Operation on item)
                 worry_level = get_new_worry_level(item, monkey.operation)
                 # Update worry level
                 worry_level //= 3
@@ -81,7 +81,7 @@ def parse_file(file): # bad function
         if_false = int(match.group(1))
 
         monkey_obj_list.append(Monkey(id, starting_items, operation, test, if_true, if_false))
-    
+
     return monkey_obj_list
 
 class Monkey():
