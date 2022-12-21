@@ -1,4 +1,4 @@
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 START_POINT = (0, 500)
 
@@ -12,7 +12,7 @@ def main():
     
     P = get_paths(file) # path list
     R = get_rock_points(P) # rock points set
-    max_rock_depth = max([x for x,y in R])
+    max_rock_depth = max([x for x, y in R])
     
     S = set() # fixed sand
     abyss = False
@@ -31,7 +31,7 @@ def produce_unit_of_sand():
     fixed = False
     while not fixed:
         x, y = c
-        O = S.union(R) # occupied points
+        O = S.union(R) # occupied points (sand + rock)
 
         if ((x + 1), y) not in O:           # down one step
             c = ((x + 1), y)
