@@ -9,9 +9,7 @@ def main():
     
     # Part 1 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     pairs = file.split('\n\n')
-
     S = []
-
     for index, pair in enumerate(pairs):
         p1, p2 = [ast.literal_eval(p) for p in pair.split('\n')]
         if compare(p1, p2) in {-1, 0}:
@@ -19,7 +17,6 @@ def main():
 
     # print(S)
     print(sum(S)) # <Part 1>
-    
     
     # Part 2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     pairs = [ast.literal_eval(p) for p in file.replace('\n\n', '\n').split('\n')]
@@ -35,7 +32,6 @@ def main():
     print(d_key) # <Part 2>
 
 def compare(left, rigth):
-
     # both values are integers
     if isinstance(left, int) and isinstance(rigth, int):
         if left < rigth: 
@@ -43,11 +39,9 @@ def compare(left, rigth):
         elif left > rigth:
             return 1
         return 0
-
     # both values are lists
     if isinstance(left, list) and isinstance(rigth, list):
         i = 0
-
         while i < len(left) and i < len(rigth):
             c = compare(left[i], rigth[i])
             if c == -1:
@@ -55,17 +49,15 @@ def compare(left, rigth):
             if c == 1:
                 return 1
             i += 1
-
         if len(left) < len(rigth):
             return -1
         if len(left) > len(rigth):
             return 1
         return 0
-
     # exactly one value is an integer
     if isinstance(left, int) and isinstance(rigth, list):
         return compare([left], rigth)
-
+    # exactly one value is an integer
     if isinstance(left, list) and isinstance(rigth, int):
         return compare(left, [rigth])
 
