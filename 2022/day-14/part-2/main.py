@@ -3,9 +3,9 @@ INPUT_FILE_PATH = '../data/input.txt'
 START_POINT = (0, 500)
 
 def main():
-    global S # fixed sand
+    global S # fixed sand set
     global R # rock points set
-    global O
+    global O # support set for the efficiency of the produce_unit_of_sand method
     global floor_depth
 
     with open(INPUT_FILE_PATH, 'r') as f:
