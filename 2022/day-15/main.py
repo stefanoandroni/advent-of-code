@@ -1,50 +1,35 @@
 import re
 
 INPUT_FILE_PATH = 'data/input.txt'
-Y = 2_000_000
+Y = 2000000
 
 def main():
-    global B_set
     with open(INPUT_FILE_PATH, 'r') as f:
         file = f.read().strip()
 
-    S, B = parse_file(file)  # S: sensors # B: beacons
-    B_set = set(B)
+    S, B = parse_file(file)  # S: sensors -> (x,y) # B: beacons -> (x,y)
+    I = get_intervals(S, B, Y) # I: intervals (of not allowed beacon positions) -> (x_start, x_end)
 
-    N = set() # N: positions a beacon cannot possibly exist
-    for i in range(len(S)): # len(S) = len(B)
-        print(f"{i+1}/{len(S)}")
-        distance = get_manhattan_distance(S[i], B[i])
-        print(distance)
-        N.update(get_no_beacon_points(S[i], distance))
-
-    R = [(x,y) for (x,y) in N if y==Y]
-    print(len(R))
-
-    # for (x,y) in N:
-    #     print((x,y))
-    # print(sum([(a, b) for (a, b) in N if a==10]))
+    R = set() # R: result -> (x0, x1, x2, .., xn)
+    for xs, xe in I:
+        R.update(range(xs, xe + 1))
     
-def get_no_beacon_points(point, distance):
-    N = set() # set to return
-    A = set() # last added
+    # notR = {x for x in R if (x, Y) in B}
+    R = {x for x in R if (x, Y) not in B} # remove position with explixit beacon
 
-    A.add(point)
-    for d in range(distance):
-        print(d)
-        for p in A.copy():
-            x, y = p
-            p1 = (x - 1, y)
-            p2 = (x + 1, y)
-            p3 = (x, y - 1)
-            p4 = (x, y + 1)
-            L = [p for p in [p1, p2, p3, p4] if p not in B_set]
-            l = [p for p in [p1, p2, p3, p4] if p not in N]
-            N.update(L)
-            A.remove(p)
-            A.update(l)
+    print(len(R)) # <Part 1>
 
-    return N
+
+def get_intervals(S, B, Y):
+    I = set() # (x_start, x_end)
+    for i in range(len(S)): # len(S) = len(B)
+        s = xs, ys = S[i]
+        b = xb, yb = B[i]
+        delta_x = get_manhattan_distance(s, b) - abs(ys - Y)
+        if delta_x > 0:
+            interval = tuple(sorted((xs + delta_x, xs - delta_x)))
+            I.add(interval)
+    return I
 
 def get_manhattan_distance(a, b):
     x1, y1 = a
