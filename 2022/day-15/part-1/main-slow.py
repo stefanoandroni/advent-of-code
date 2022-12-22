@@ -1,6 +1,6 @@
 import re
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 Y = 2_000_000
 
 def main():
