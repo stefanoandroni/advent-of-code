@@ -21,7 +21,6 @@ def main():
     I = {}
     for y in range(C_max + 1): # [0,C_max]
         I[y] = get_intervals(S, B, y)
-        print(y)
 
     distress_beacon = find_distress_beacon(I)
     # print(distress_beacon)
@@ -30,7 +29,7 @@ def main():
 
 def find_distress_beacon(I):
     for key in I:
-        R = set(range(C_min, C_max)) # R: result -> (x0, x1, x2, .., xn)
+        R = set(range(C_min, C_max + 1)) # R: result -> (x0, x1, x2, .., xn)
         for (xs, xe) in I[key]:
             R = R - set(range(xs, xe + 1))
         if len(R) == 1: # > 0 never 
