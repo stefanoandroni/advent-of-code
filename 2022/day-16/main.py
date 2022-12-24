@@ -5,9 +5,12 @@ from itertools import permutations
 INPUT_FILE_PATH = 'data/input.txt'
 
 START_VALVE = "AA"
-TOTAL_TIME = 30 # minutes
-OPEN_TIME = 1 # minute
-STEP_TIME = 1 # minute
+
+TOTAL_TIME_1 = 30 
+TOTAL_TIME_2 = 26
+OPEN_TIME = 1 
+STEP_TIME = 1 
+# time in minutes
 
 def main():
     global N
@@ -24,11 +27,27 @@ def main():
     N, G = reduce_graph(V) # N: nodes, G: graph matrix
     
     # Simulate    
-    s = simulate(TOTAL_TIME)
+    # Part1 - - - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - -
+    s1 = simulate(TOTAL_TIME_1)
   
-    m = max(s.values())
+    m = max(s1.values())
     print(m) # <Part 1>
 
+    # Part2 - - - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - -
+    s2 = simulate(TOTAL_TIME_2)
+    m = max(s2.values())
+
+    # works cause A has rate=0
+    m = 0
+    for key1, value1 in s2.items():
+        for  key2, value2 in s2.items():
+            c1, t1, set1 = key1
+            c2, t2, set2 = key2
+            if len(set(set1) & set(set2)) == 0: # no intersection
+                if value1 + value2 > m:
+                    m = value1 + value2
+    print(m) # <Part 2> # O(N^2) -> very slow
+    
 def simulate(T): 
     queue = deque()
     B = defaultdict(lambda: -1)
@@ -55,7 +74,6 @@ def simulate(T):
             if t_move_cost <= t:
                 # move to valve
                 add(n, t - t_move_cost, o, f)
-
     return B
 
 def reduce_graph(Vdict):
