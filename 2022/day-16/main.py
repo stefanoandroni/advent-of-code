@@ -13,9 +13,7 @@ STEP_TIME = 1
 # time in minutes
 
 def main():
-    global N
-    global G
-    global V
+    global N, G, V
 
     with open(INPUT_FILE_PATH, 'r') as f:
         file = f.read().strip()
@@ -37,7 +35,7 @@ def main():
     s2 = simulate(TOTAL_TIME_2)
     m = max(s2.values())
 
-    # works cause A has rate=0
+    # works because AA has rate = 0
     m = 0
     for key1, value1 in s2.items():
         for  key2, value2 in s2.items():

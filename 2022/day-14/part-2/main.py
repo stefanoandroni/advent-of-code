@@ -26,7 +26,7 @@ def main():
         S.add(unit)
         O.add(unit)
         # print_matrix(R, S)
-    
+    print_matrix(R, S)
     print(len(S)) # <Part 2>
 
 
