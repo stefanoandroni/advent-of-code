@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 INPUT_FILE_PATH_ROCK = 'data/rocks.txt'
-INPUT_FILE_PATH_JET = 'data/test-jet-pattern.txt'
+INPUT_FILE_PATH_JET = 'data/jet-pattern.txt'
 
 STOP = 2022
 
@@ -17,31 +17,31 @@ ROCK_SIMBOL = '#'
 LEFT_SYBMOL = '<'
 RIGTH_SYMBOL = '>'
 
-global H
-H = 0
 
 def main():
-    global J, R, S, M, H # J: jet pattern # R: rocks # S: stopped rocks # H: max rocks height # M: {x: left/rigth, y: down}
-
+    global J, R, S, M, H # J: jet pattern # R: rocks # S: stopped rocks # H: max y index height # M: {x: left/rigth, y: down}
+    
+    H = -1
     S = set() 
     M = [X_MOVE_SYMBOL, y_MOVE_SYMBOL] 
 
     # Parse files
     R = parse_rock_file(INPUT_FILE_PATH_ROCK)
     J = parse_jet_file(INPUT_FILE_PATH_JET)
-    print(R)
 
     i = 0
     while i < STOP:
         drop_rock()
-        # print(i, H)
         # print_matrix(S)
         i += 1
-    print(H)
+
+    update_H()
+    print(H+1) # <Part 1>
 
 def drop_rock():
+    update_H()
     r = get_rock().put_in_start_pos()
-
+    
     stop = False
     while not stop:
         m = get_move()
@@ -49,19 +49,10 @@ def drop_rock():
             j = get_jet()
             r = r.move_to(j)
         else: # Y MOVE
-            r, stop = r.move_down()
-    
+            r, stop = r.move_down()      
     S.update(r.points)
-    update_H()
 
-def jet_move_to(rock, jet):
-    points = rock.points
-    for point in points:
-        point.x = point.x + 2
-        point.y = point.y + H + 3
-    return rock
-
-def get_move():
+def get_move(): # infinite queue with list
     m = M.pop(0)
     M.append(m)
     return m
@@ -93,7 +84,6 @@ def parse_rock_file(path):
         s = set()
         
         lines = rock.split('\n')
-
         h = len(lines)
         w = len(lines[0])
 
@@ -113,7 +103,7 @@ def parse_rock_file(path):
     for r in rocks:
         rock = Rock(parse_rock(r))
         R.append(rock)    
-
+        
     return R
 
 class Point:
@@ -126,15 +116,6 @@ class Point:
     def __str__(self):
         return "({}, {})".format(self.x, self.y)
 
-    def __neg__(self):
-        return Point(-self.x, -self.y)
-
-    def __add__(self, point):
-        return Point(self.x+point.x, self.y+point.y)
-
-    def __sub__(self, point):
-        return self + -point
-
     def __key(self):
         return (self.x, self.y)
 
@@ -146,12 +127,9 @@ class Point:
             return self.__key() == other.__key()
         return NotImplemented
 
-
     def move_to_start_pos(self):
-        global H
         self.x = self.x + 2
-        self.y = self.y + H + 3
-        return self
+        self.y = self.y + (H + 1) + 3
 
     def move_to(self, delta_x, delta_y):
         self.x += delta_x
@@ -210,7 +188,7 @@ def is_valid_x_move(points):
     for point in points:
         x = point.x
         y = point.y 
-        if point in S: # stopped rock
+        if point in S: # stopped rock 
             return False
         if x < LEFT_LIMIT or x > RIGTH_LIMIT: # walls
             return False
@@ -229,17 +207,23 @@ def is_valid_y_move(points):
     return True
 
 def update_H():
+    # assigns H the highest y-value among the points in S
     global H
     for p in S:
         y = p.y
         if y > H:
             H = y
-    H += 1
 
 def print_matrix(s):  
-    # t = set_of_points_to_set_of_tuple(s) 
+    y_max = 0
+    for p in s:
+        y = p.y
+        if y > y_max:
+            y_max = y
+    yh = max(y_max, H+3)
+
     m = []
-    for h in range(H+3, -1, -1):
+    for h in range(yh, -1, -1):
         row = ""
         for r in range(RIGTH_LIMIT + 1):
             # print((r,h))
@@ -249,12 +233,7 @@ def print_matrix(s):
                 row += NO_ROCK_SYMBOL
         m.append(row)
     print(*m, sep='\n')
-
-def set_of_points_to_set_of_tuple(points):
-    s = set()
-    for p in points:
-        s.add((p.x, p.y))
-    return s
+    print()
 
 if __name__ == "__main__":
     main()
