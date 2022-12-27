@@ -1,5 +1,7 @@
+from copy import deepcopy
+
 INPUT_FILE_PATH_ROCK = 'data/rocks.txt'
-INPUT_FILE_PATH_JET = 'data/jet-pattern.txt'
+INPUT_FILE_PATH_JET = 'data/test-jet-pattern.txt'
 
 STOP = 2022
 
@@ -7,38 +9,67 @@ LEFT_LIMIT = 0
 RIGTH_LIMIT = 6
 BOTTOM_LIMIT = 0
 
+X_MOVE_SYMBOL = 'x'
+y_MOVE_SYMBOL = 'y'
+
+NO_ROCK_SYMBOL = '.'
 ROCK_SIMBOL = '#'
 LEFT_SYBMOL = '<'
 RIGTH_SYMBOL = '>'
 
+global H
+H = 0
+
 def main():
-    global J, R, S # J: jet pattern # R: rocks # S: stopped rocks
+    global J, R, S, M, H # J: jet pattern # R: rocks # S: stopped rocks # H: max rocks height # M: {x: left/rigth, y: down}
 
     S = set() 
+    M = [X_MOVE_SYMBOL, y_MOVE_SYMBOL] 
 
     # Parse files
     R = parse_rock_file(INPUT_FILE_PATH_ROCK)
     J = parse_jet_file(INPUT_FILE_PATH_JET)
+    print(R)
 
-    c = 0
-    while c <= 2022:
-        r = get_rock()
-        drop(r)
+    i = 0
+    while i < STOP:
+        drop_rock()
+        # print(i, H)
+        # print_matrix(S)
+        i += 1
+    print(H)
 
+def drop_rock():
+    r = get_rock().put_in_start_pos()
 
-    # Rock: move to start (y= H + 3, x = 2) # no overflow control
-    #       move sx # overflow control
-    #       move rg # overflow control
-    #       move down # overflow control
-    # overflow-> return True o False?
+    stop = False
+    while not stop:
+        m = get_move()
+        if m == X_MOVE_SYMBOL: # X MOVE
+            j = get_jet()
+            r = r.move_to(j)
+        else: # Y MOVE
+            r, stop = r.move_down()
+    
+    S.update(r.points)
+    update_H()
 
-def drop(rock):
-    pass
+def jet_move_to(rock, jet):
+    points = rock.points
+    for point in points:
+        point.x = point.x + 2
+        point.y = point.y + H + 3
+    return rock
+
+def get_move():
+    m = M.pop(0)
+    M.append(m)
+    return m
 
 def get_rock(): # infinite queue with list
     r = R.pop(0)
     R.append(r)
-    return r
+    return deepcopy(r)
 
 def get_jet(): # infinite queue with list
     j = J.pop(0)
@@ -104,6 +135,33 @@ class Point:
     def __sub__(self, point):
         return self + -point
 
+    def __key(self):
+        return (self.x, self.y)
+
+    def __hash__(self):
+        return hash(self.__key())
+
+    def __eq__(self, other):
+        if isinstance(other, Point):
+            return self.__key() == other.__key()
+        return NotImplemented
+
+
+    def move_to_start_pos(self):
+        global H
+        self.x = self.x + 2
+        self.y = self.y + H + 3
+        return self
+
+    def move_to(self, delta_x, delta_y):
+        self.x += delta_x
+        self.y += delta_y
+        return self
+    
+    def move_down(self):
+        self.y -= 1
+        return self
+
 class Rock:
     def __init__(self, points):
         self.points = points
@@ -111,6 +169,92 @@ class Rock:
     def __repr__(self):
         return ("[" + ",".join(set(str(p) for p in self.points )) + "]")
 
+    def put_in_start_pos(self):
+        for point in self.points:
+            point.move_to_start_pos()
+        return self
+
+    def move_to(self, dir):
+        delta_x = 1
+        if dir == LEFT_SYBMOL:
+            delta_x = -1
+
+        points = self.points
+
+        new_points = set()
+        for point in points:
+            new_points.add(deepcopy(point).move_to(delta_x, 0))
+
+        is_valid = is_valid_x_move(new_points)
+        if is_valid: 
+            self.points = new_points
+        else:
+            self.points = points
+        return self
+    
+    def move_down(self):
+        points = self.points
+
+        new_points = set()
+        for point in points:
+            new_points.add(deepcopy(point).move_down())
+
+        is_valid = is_valid_y_move(new_points)
+        if is_valid: 
+            self.points = new_points
+        else:
+            self.points = points
+        return self, not is_valid
+
+def is_valid_x_move(points):
+    for point in points:
+        x = point.x
+        y = point.y 
+        if point in S: # stopped rock
+            return False
+        if x < LEFT_LIMIT or x > RIGTH_LIMIT: # walls
+            return False
+    return True
+
+def is_valid_y_move(points):
+    for point in points:
+        x = point.x
+        y = point.y 
+        if point in S: # stopped rock
+            return False
+        if x < LEFT_LIMIT or x > RIGTH_LIMIT: # walls # TODO: remove if statement
+            return False
+        if y < 0:
+            return False
+    return True
+
+def update_H():
+    global H
+    for p in S:
+        y = p.y
+        if y > H:
+            H = y
+    H += 1
+
+def print_matrix(s):  
+    # t = set_of_points_to_set_of_tuple(s) 
+    m = []
+    for h in range(H+3, -1, -1):
+        row = ""
+        for r in range(RIGTH_LIMIT + 1):
+            # print((r,h))
+            if Point(r,h) in s:
+                row += ROCK_SIMBOL
+            else:
+                row += NO_ROCK_SYMBOL
+        m.append(row)
+    print(*m, sep='\n')
+
+def set_of_points_to_set_of_tuple(points):
+    s = set()
+    for p in points:
+        s.add((p.x, p.y))
+    return s
 
 if __name__ == "__main__":
     main()
