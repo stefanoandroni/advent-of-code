@@ -11,7 +11,7 @@ RIGTH_LIMIT = 6
 BOTTOM_LIMIT = 0
 
 X_MOVE_SYMBOL = 'x'
-y_MOVE_SYMBOL = 'y'
+Y_MOVE_SYMBOL = 'y'
 
 NO_ROCK_SYMBOL = '.'
 ROCK_SIMBOL = '#'
@@ -54,12 +54,12 @@ def simulate(stop_num):
         drop_rock()
         state = (JIndex, RIndex, ",".join([str(x) for x in heights]))
         if not(found_cycle_start):
-            if state == target_state:
+            if state == target_state: # cycle start founded
                 first_cycle_start_index = i
                 found_cycle_start = True
         else:
             L.append(H + 1 - prev_H)
-            if state == target_state:
+            if state == target_state: # cycle end founded
                 break               
         i += 1
 
@@ -124,7 +124,7 @@ def simulate(stop_num):
 
 def drop_rock():
     global M
-    M = [X_MOVE_SYMBOL, y_MOVE_SYMBOL]
+    M = [X_MOVE_SYMBOL, Y_MOVE_SYMBOL]
     r = get_rock().put_in_start_pos()
 
     stop = False
