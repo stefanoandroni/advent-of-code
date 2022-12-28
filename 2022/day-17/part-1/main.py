@@ -3,14 +3,14 @@ from copy import deepcopy
 INPUT_FILE_PATH_ROCK = '../data/rocks.txt'
 INPUT_FILE_PATH_JET = '../data/jet-pattern.txt'
 
-STOP= 2022
+STOP = 2022
 
 LEFT_LIMIT = 0
 RIGTH_LIMIT = 6
 BOTTOM_LIMIT = 0
 
 X_MOVE_SYMBOL = 'x'
-y_MOVE_SYMBOL = 'y'
+Y_MOVE_SYMBOL = 'y'
 
 NO_ROCK_SYMBOL = '.'
 ROCK_SIMBOL = '#'
