@@ -1,9 +1,13 @@
+# update h not on S, but only on new rock's points
+# find is ther is a pattern in jet to make it shorter
+
+from math import lcm
 from copy import deepcopy
 
-INPUT_FILE_PATH_ROCK = 'data/rocks.txt'
-INPUT_FILE_PATH_JET = 'data/jet-pattern.txt'
+INPUT_FILE_PATH_ROCK = '../data/rocks.txt'
+INPUT_FILE_PATH_JET = '../data/test-jet-pattern.txt'
 
-STOP = 2022
+STOP = 1_000_000_000_000
 
 LEFT_LIMIT = 0
 RIGTH_LIMIT = 6
@@ -19,29 +23,123 @@ RIGTH_SYMBOL = '>'
 
 
 def main():
-    global J, R, S, M, H # J: jet pattern # R: rocks # S: stopped rocks # H: max y index height # M: {x: left/rigth, y: down}
+    simulate(STOP) # <Part 2>
+
+def simulate(stop_num):
+    global M, heights
+
+    # Find the repeat end status (first repeated)
+    reset()
+
+    found_rep_end = False
+    i = 0
+    while not(found_rep_end) and i < stop_num:
+        H_prev = H
+        M = [X_MOVE_SYMBOL, y_MOVE_SYMBOL]
+        drop_rock()
+        state = (JIndex, RIndex, "".join([str(x) for x in heights]))
+        if state in STATES:
+            rep_end_state = state # succ state
+            found_rep_end = True
+        STATES.add(state)
+        i += 1
+
+    # Find the repeat start status (first equal to 'repeat end status')
+    # ----------------------------------------------------------------- 
+    reset()
+
+    L = []
+    found_rep_start = False
+    found_rep_end = False
+
+    i = 0
+    while not (found_rep_end) and i < stop_num:
+        H_prev = H
+        M = [X_MOVE_SYMBOL, y_MOVE_SYMBOL]
+        drop_rock()
+        state = (JIndex, RIndex, "".join([str(x) for x in heights]))
+        if not(found_rep_start):
+            if state == rep_end_state:
+                rep_start_index = i
+                # h_rep_start = H_prev
+                # print(H)
+                found_rep_start = True
+                L.append(H - H_prev)
+        else:
+            if state == rep_end_state:
+                rep_end_index = i - 1 
+                # h_rep_end = H_prev
+                found_rep_end = True
+            else:
+                L.append(H - H_prev)
+        i += 1
+
+    print(L) #
+    print(sum(L))
+    print(len(L))
+    print(rep_start_index, rep_end_index, rep_end_index - rep_start_index)
+    # print(h_rep_end-h_rep_start)
+
+    repeat_gain = sum(L)
+    repeat_width = len(L)
+    total_height = 0
+
+    for i in range(0, rep_start_index):
+        total_height += L[i]
+
+    n = (STOP - rep_start_index) // repeat_width
+    r = (STOP - rep_start_index) % repeat_width
+
+    print(n,r)
+    # print( ((n * repeat_width) + r) == (STOP - rep_start_index))
+    
+    total_height += n * repeat_gain
+
+    # print( r + rep_start_index + n * repeat_width )
+    
+    for i in range(0, r):
+        total_height += L[i]
+
+    print(total_height)
+
+
+def reset():
+    global J, R, S, H # J: jet pattern # R: rocks # S: stopped rocks # H: max y index height # M: {x: left/rigth, y: down}
+    global STATES, JIndex, RIndex, heights
     
     H = -1
     S = set() 
-    M = [X_MOVE_SYMBOL, y_MOVE_SYMBOL] 
+    get_H()
+    
+    l = RIGTH_LIMIT - LEFT_LIMIT 
+    heights = [0 for _ in range(l + 1)]
+
+    JIndex = -1
+    RIndex = -1
+
+    STATES = set() # normalized higts for x=0..6, current_shape_index, current_jet_index
 
     # Parse files
     R = parse_rock_file(INPUT_FILE_PATH_ROCK)
     J = parse_jet_file(INPUT_FILE_PATH_JET)
 
-    i = 0
-    while i < STOP:
-        drop_rock()
-        # print_matrix(S)
-        i += 1
+def udateNormalizedHeights(new_points):
+    global heights
+    l = RIGTH_LIMIT - LEFT_LIMIT 
 
-    update_H()
-    print(H+1) # <Part 1>
+    for i in range(l + 1):
+        for p in new_points:
+            if p.x == i:
+                if p.y > heights[i]: heights[i] = p.y 
+    
+    # Normalize 
+    m = min(heights)
+    for i in range(len(heights)):
+        heights[i] -= m
+
 
 def drop_rock():
-    update_H()
     r = get_rock().put_in_start_pos()
-    
     stop = False
     while not stop:
         m = get_move()
@@ -49,8 +147,10 @@ def drop_rock():
             j = get_jet()
             r = r.move_to(j)
         else: # Y MOVE
-            r, stop = r.move_down()      
+            r, stop = r.move_down()   
     S.update(r.points)
+    update_H(r.points)
+    udateNormalizedHeights(r.points)
 
 def get_move(): # infinite queue with list
     m = M.pop(0)
@@ -58,11 +158,19 @@ def get_move(): # infinite queue with list
     return m
 
 def get_rock(): # infinite queue with list
+    global R, RIndex
+    RIndex += 1
+    if RIndex == len(R):
+        RIndex = 0
     r = R.pop(0)
     R.append(r)
     return deepcopy(r)
 
 def get_jet(): # infinite queue with list
+    global JIndex
+    JIndex += 1
+    if JIndex == len(J):
+        JIndex = 0
     j = J.pop(0)
     J.append(j)
     return j
@@ -103,7 +211,7 @@ def parse_rock_file(path):
     for r in rocks:
         rock = Rock(parse_rock(r))
         R.append(rock)    
-        
+
     return R
 
 class Point:
@@ -206,7 +314,15 @@ def is_valid_y_move(points):
             return False
     return True
 
-def update_H():
+def update_H(s):
+    # assigns H the highest y-value among the points in S
+    global H
+    for p in s:
+        y = p.y
+        if y > H:
+            H = y
+
+def get_H():
     # assigns H the highest y-value among the points in S
     global H
     for p in S:
