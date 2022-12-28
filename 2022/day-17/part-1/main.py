@@ -44,7 +44,7 @@ def simulate(stop_num):
 
 def drop_rock():
     global M
-    M = [X_MOVE_SYMBOL, y_MOVE_SYMBOL] 
+    M = [X_MOVE_SYMBOL, Y_MOVE_SYMBOL] 
     update_H()
     r = get_rock().put_in_start_pos()
     
@@ -233,6 +233,7 @@ def print_matrix(s):
         row = ""
         for r in range(RIGTH_LIMIT + 1):
             # print((r,h))
+            # row += " "
             if Point(r,h) in s:
                 row += ROCK_SIMBOL
             else:
