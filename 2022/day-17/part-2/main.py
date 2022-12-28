@@ -1,11 +1,8 @@
-# update h not on S, but only on new rock's points
-# find is ther is a pattern in jet to make it shorter
-
 from math import lcm
 from copy import deepcopy
 
 INPUT_FILE_PATH_ROCK = '../data/rocks.txt'
-INPUT_FILE_PATH_JET = '../data/test-jet-pattern.txt'
+INPUT_FILE_PATH_JET = '../data/jet-pattern.txt'
 
 STOP = 1_000_000_000_000
 
@@ -23,93 +20,160 @@ RIGTH_SYMBOL = '>'
 
 
 def main():
-    simulate(STOP) # <Part 2>
+    simulate(STOP) 
 
 def simulate(stop_num):
-    global M, heights
+    global heights
 
-    # Find the repeat end status (first repeated)
+    # state = (current_jet_index, current_shape_index, normalized heights for x = 0..6)
+   
+    # Find the first state already encountered  - - - - - - - - - - - - - - - - 
     reset()
 
-    found_rep_end = False
     i = 0
-    while not(found_rep_end) and i < stop_num:
-        H_prev = H
-        M = [X_MOVE_SYMBOL, y_MOVE_SYMBOL]
+    while i < stop_num:
         drop_rock()
-        state = (JIndex, RIndex, "".join([str(x) for x in heights]))
+        state = (JIndex, RIndex, ",".join([str(x) for x in heights]))
         if state in STATES:
-            rep_end_state = state # succ state
-            found_rep_end = True
-        STATES.add(state)
+            target_state = state
+            break
+        STATES.append(state)
         i += 1
 
-    # Find the repeat start status (first equal to 'repeat end status')
-    # ----------------------------------------------------------------- 
+    last_state = STATES[-1]
+
+    # Find the width and height gain of the cycle   - - - - - - - - - - - - - -
     reset()
 
     L = []
-    found_rep_start = False
-    found_rep_end = False
-
+    
+    found_cycle_start = False
     i = 0
-    while not (found_rep_end) and i < stop_num:
-        H_prev = H
-        M = [X_MOVE_SYMBOL, y_MOVE_SYMBOL]
+    while i < stop_num:
+        prev_H = H + 1 # if H > 0 else 0
         drop_rock()
-        state = (JIndex, RIndex, "".join([str(x) for x in heights]))
-        if not(found_rep_start):
-            if state == rep_end_state:
-                rep_start_index = i
-                # h_rep_start = H_prev
-                # print(H)
-                found_rep_start = True
-                L.append(H - H_prev)
+        state = (JIndex, RIndex, ",".join([str(x) for x in heights]))
+        if not(found_cycle_start):
+            if state == target_state:
+                first_cycle_start_index = i
+                found_cycle_start = True
         else:
-            if state == rep_end_state:
-                rep_end_index = i - 1 
-                # h_rep_end = H_prev
-                found_rep_end = True
-            else:
-                L.append(H - H_prev)
+            L.append(H + 1 - prev_H)
+            if state == target_state:
+                break               
         i += 1
 
-    print(L) #
-    print(sum(L))
-    print(len(L))
-    print(rep_start_index, rep_end_index, rep_end_index - rep_start_index)
-    # print(h_rep_end-h_rep_start)
+    cycle_H_gain = sum(L) # Cycle H gained
+    cycle_width = len(L)  # Cycle width
 
-    repeat_gain = sum(L)
-    repeat_width = len(L)
+
+    # Calculate the total height    - - - - - - - - - - - - - - - - - - - - - -
     total_height = 0
 
-    for i in range(0, rep_start_index):
-        total_height += L[i]
-
-    n = (STOP - rep_start_index) // repeat_width
-    r = (STOP - rep_start_index) % repeat_width
-
-    print(n,r)
-    # print( ((n * repeat_width) + r) == (STOP - rep_start_index))
+    # Drop the blocks until the first cycle starts
+    reset()
+    i = 0
+    while i < first_cycle_start_index:
+        drop_rock()
+        h = H
+        i += 1
     
-    total_height += n * repeat_gain
+    total_height += h
 
-    # print( r + rep_start_index + n * repeat_width )
+    # Calculate total height for full cycles
+    n = (STOP - (first_cycle_start_index)) // cycle_width
+    r = (STOP - (first_cycle_start_index)) % cycle_width
     
-    for i in range(0, r):
-        total_height += L[i]
+    total_height += n * cycle_H_gain
 
-    print(total_height)
+    # Calculate the height for the remaining blocks starting from the last state of the cycle
+    reset_from_state(last_state) # last state of cycle
+    
+    i = 0
+    while i < r:
+        drop_rock()
+        h = H
+        i += 1
 
+    _, _, heights = last_state
+    starting_h = max([int(x) for x in heights.split(",")])
+
+    total_height += h - starting_h + 1
+
+    print(total_height) # <Part 2>
+
+
+# FIRST APPROACH (not worked for me)    \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+# Idea -->  c,d,e,a,b,c,d,e,a,b,c,d,e,a,b,c,d,e,a,b
+#           final part of the cycle + N*cycle + early part of the cycle
+#           with cycle = a,b,c,d,e
+
+#     for i in range(len(L) - 1, len(L) - first_cycle_start_index - 1, -1):
+#         total_height += L[i]
+
+#     n = (STOP - (first_cycle_start_index)) // cycle_width
+#     r = (STOP - (first_cycle_start_index)) % cycle_width
+    
+#     total_height += n * cycle_H_gain
+
+#     for i in range(0, r):
+#         total_height += L[i]
+
+#     print(total_height)
+# \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 
+
+def drop_rock():
+    global M
+    M = [X_MOVE_SYMBOL, y_MOVE_SYMBOL]
+    r = get_rock().put_in_start_pos()
+
+    stop = False
+    while not stop:
+        m = get_move()
+        if m == X_MOVE_SYMBOL: # X MOVE
+            j = get_jet()
+            r = r.move_to(j)
+        else: # Y MOVE
+            r, stop = r.move_down() 
+      
+    S.update(r.points)
+    update_H(r.points)
+    udateNormalizedHeights(r.points)
+    
+def get_move(): # infinite queue with list
+    m = M.pop(0)
+    M.append(m)
+    return m
+
+def get_rock(): # infinite queue with list
+    global RIndex
+    RIndex += 1
+    if RIndex >= len(R):
+        RIndex -= len(R)
+    r = R.pop(0)
+    R.append(r)
+    return deepcopy(r)
+
+def get_jet(): # infinite queue with list
+    global JIndex
+    JIndex += 1
+    if JIndex >= len(J):
+        JIndex -= len(J)
+    j = J.pop(0)
+    J.append(j)
+    return j
 
 def reset():
-    global J, R, S, H # J: jet pattern # R: rocks # S: stopped rocks # H: max y index height # M: {x: left/rigth, y: down}
+    global J, R, S, H # J: jet pattern # R: rocks # S: stopped rocks # H: max y index height
     global STATES, JIndex, RIndex, heights
     
+    # Parse files
+    R = parse_rock_file(INPUT_FILE_PATH_ROCK)
+    J = parse_jet_file(INPUT_FILE_PATH_JET)
+
     H = -1
-    S = set() 
-    get_H()
+    S = set()
+    get_H() 
     
     l = RIGTH_LIMIT - LEFT_LIMIT 
     heights = [0 for _ in range(l + 1)]
@@ -117,14 +181,42 @@ def reset():
     JIndex = -1
     RIndex = -1
 
-    STATES = set() # normalized higts for x=0..6, current_shape_index, current_jet_index
+    STATES = []
 
+def reset_from_state(state):
+    global J, R, S, H # J: jet pattern # R: rocks # S: stopped rocks # H: max y index height
+    global STATES, JIndex, RIndex, heights
+    
     # Parse files
     R = parse_rock_file(INPUT_FILE_PATH_ROCK)
     J = parse_jet_file(INPUT_FILE_PATH_JET)
 
+    j, r, hs = state
+    
+    S = set() 
+    for index, h in enumerate(hs.split(",")):
+        S.add(Point(index, int(h)))
+
+    H = -1
+    get_H()
+    
+    l = RIGTH_LIMIT - LEFT_LIMIT 
+    heights = [int(x) for x in hs.split(",")]
+
+    JIndex = -1
+    RIndex = -1
+
+    for _ in range(0, j+1):
+        get_jet()
+
+    for _ in range(0, r+1):
+        get_rock()
+
+    STATES = [] 
+
 def udateNormalizedHeights(new_points):
     global heights
+
     l = RIGTH_LIMIT - LEFT_LIMIT 
 
     for i in range(l + 1):
@@ -136,44 +228,6 @@ def udateNormalizedHeights(new_points):
     m = min(heights)
     for i in range(len(heights)):
         heights[i] -= m
-
-
-def drop_rock():
-    r = get_rock().put_in_start_pos()
-    stop = False
-    while not stop:
-        m = get_move()
-        if m == X_MOVE_SYMBOL: # X MOVE
-            j = get_jet()
-            r = r.move_to(j)
-        else: # Y MOVE
-            r, stop = r.move_down()   
-    S.update(r.points)
-    update_H(r.points)
-    udateNormalizedHeights(r.points)
-
-def get_move(): # infinite queue with list
-    m = M.pop(0)
-    M.append(m)
-    return m
-
-def get_rock(): # infinite queue with list
-    global R, RIndex
-    RIndex += 1
-    if RIndex == len(R):
-        RIndex = 0
-    r = R.pop(0)
-    R.append(r)
-    return deepcopy(r)
-
-def get_jet(): # infinite queue with list
-    global JIndex
-    JIndex += 1
-    if JIndex == len(J):
-        JIndex = 0
-    j = J.pop(0)
-    J.append(j)
-    return j
 
 def parse_jet_file(path):
     J = []

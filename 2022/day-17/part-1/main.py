@@ -32,12 +32,9 @@ def main():
     simulate(STOP) # <Part 1>
     # simulate(STOP_PART_2) # <Part 2> slow
 
-def simulate(stop_num):
-    global M
-    
+def simulate(stop_num):    
     i = 0
     while i < stop_num:
-        M = [X_MOVE_SYMBOL, y_MOVE_SYMBOL] 
         drop_rock()
         # print_matrix(S)
         i += 1
@@ -46,6 +43,8 @@ def simulate(stop_num):
     print(H+1) 
 
 def drop_rock():
+    global M
+    M = [X_MOVE_SYMBOL, y_MOVE_SYMBOL] 
     update_H()
     r = get_rock().put_in_start_pos()
     
