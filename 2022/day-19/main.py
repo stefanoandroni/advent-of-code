@@ -15,10 +15,6 @@ TOTAL_TIME = 24 # minutes
 ROBOTS = [(1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1)]
 
 def main():
-    global P
-    global MC
-
-    P = parse_file(INPUT_FILE_PATH)
     
     def get_max_costs(project_id):
         project = P[project_id]
@@ -30,18 +26,21 @@ def main():
             if z > max[2]: max[2] = z
             if k > max[3]: max[3] = k # useless
         return max
-    
+
+    global MC, P
     QL = [] # QL: projects' quality levels
 
+    # Parse file
+    P = parse_file(INPUT_FILE_PATH)
+
+    # Get mmax # of geodes per project
     for i in range(len(P)):
         project_id = i + 1
-        MC = get_max_costs(project_id) # MX: max minerals costs (for all robot) of current project
+        MC = get_max_costs(project_id) # MX: max minerals costs (for all robot) of project with id 'project_id'
         geode_num = get_max_num_of_geodes(P[project_id])
-        print(geode_num)
-        
         QL.append(get_quality_level(geode_num, project_id))
 
-    #print(sum(QL))
+    print(sum(QL)) # <Part1>
     
 def get_quality_level(geode_num, project_id):
     return geode_num * project_id
@@ -57,59 +56,99 @@ def get_max_num_of_geodes(project):
     def get_buildable_robots(minerals):
         B = []
 
-        for index, robot_cost in enumerate(project):
-            x, y, z, _ = new_tuple = diff_tuple(minerals, robot_cost)
+        for i in range(len(project)):
+            x, y, z, _  = diff_tuple(minerals, project[i])
             if x >= 0 and y >= 0 and z >= 0:
-                B.append([index, robot_cost])
+                B.append(i)
         return B
 
-    def optimized(state):
+    def get_optimized_state(state):
+        add = True
+        
         (ore_r, cla_r, obs_r, geo_r), (ore_m, cla_m, obs_m, geo_m), t = state
+        
+        # Opt1: keep only the resources needed in the worst case
+        if ore_m > (MC[ORE] * t) - (ore_r * (t-1)): 
+            ore_m = (MC[ORE] * t) - (ore_r * (t-1))
+        if cla_m > (MC[CLAY] * t) - (cla_r * (t-1)):
+            cla_m =(MC[CLAY] * t) - (cla_r * (t-1))
+        if obs_m > (MC[OBSIDIAN] * t) - (obs_r * (t-1)):
+            obs_m = (MC[OBSIDIAN] * t) - (obs_r * (t-1))
+        if ore_m > (MC[ORE] * t) - (ore_r * (t-1)):
+            ore_m = MC[ORE]
+
+        # Opt2: limits the production of useless robots
+        if ore_r > MC[ORE]: ore_r = MC[ORE]
+        if cla_r > MC[CLAY]: cla_r = MC[CLAY]
+        if obs_r > MC[OBSIDIAN]: obs_r = MC[OBSIDIAN] # if geo_r > MC[3]:
+
+        # Opt3
+        # if TM[t] > geo_m: # 1) > 0r >=?? 2) su m o r??
+        #     add = False
+        
+        state = ((ore_r, cla_r, obs_r, geo_r), (ore_m, cla_m, obs_m, geo_m), t)
+
         if state in S:
-            return False
-        if ore_r > MC[0] or cla_r > MC[1] or obs_r > MC[2]: # or geo_r > MC[3]:
-            return False
-        return True
+            add = False
+
+        return add, state
     
+    def add_state(state):
+        add, state = get_optimized_state(state)
+        if add:
+            queue.append(state)
+
+    S = set()
+    TM = [0] * (TOTAL_TIME + 1) # Geode Max at time
+    max_geode = 0
     queue = deque()
 
     R = (1, 0, 0, 0) # robot [Ore, Clay, Obsidian, Geode]
     M = (0, 0, 0, 0) # minerals [Ore, Clay, Obsidian, Geode]
     t = TOTAL_TIME
-    s0 = (R, M, t)
+    s0 = (R, M, TOTAL_TIME)
 
-    queue.append(s0)
-
-    max_geode = 0
-    S = set()
+    add_state(s0)
 
     while queue:
         r, m, t = s = queue.popleft()
-        S.add(s)
-        #print(s)
-        if t >= 0:
-            
-            _, _, _, geode_r = r
-            if geode_r > max_geode:
-                max_geode = geode_r
-            
-            B = get_buildable_robots(m)
-            # if len(B) == 0: # Non posso costruire robot       # FORSE: se non posso costruire robot nel t rimanente
-            #     print("I CANT")
-            queue.append((r, sum_tuple(m, r), t-1)) 
-            #else: # Posso costruire robot
-            if GEODE in [x for x, _ in B]: # Posso costruire robot di GEODE
-                b = [(x,y) for x, y in B if x == GEODE][0]
-                robot_index, robot_cost = b
-                state = (sum_tuple(r, ROBOTS[robot_index]), diff_tuple(sum_tuple(m, r), robot_cost), t-1)
-                queue.append(state)
-            else: 
-                for b in B:
-                    robot_index, robot_cost = b
-                    state = (sum_tuple(r, ROBOTS[robot_index]), diff_tuple(sum_tuple(m, r), robot_cost), t-1)
-                    if optimized(state):
-                        queue.append(state) 
 
+        if s in S:
+            continue
+
+        S.add(s)
+
+        if t > 0:
+
+            # Update minerals and time
+            new_minerals = sum_tuple(m, r)
+            new_t = t - 1
+
+            # Update max
+            _, _, _, geode_num = new_minerals
+            max_geode = max(max_geode, geode_num)
+            # TM[t] = max(TM[t], geode_num)
+
+
+            # Get buildable robots
+            B = get_buildable_robots(m)
+
+            if GEODE in B: # If i can build a geode robot, i build it
+                new_robots = sum_tuple(r, ROBOTS[GEODE])
+                new_minerals = diff_tuple(new_minerals, project[GEODE])
+                state = (new_robots, new_minerals, new_t)
+                add_state(state)
+            else:
+                # I don't build any robots
+                state = (r, new_minerals, new_t)
+                add_state(state) 
+                # I try to build every robot possible
+                for i in B:
+                    new_r = sum_tuple(r, ROBOTS[i])
+                    new_m = diff_tuple(new_minerals, project[i])
+                    state = (new_r, new_m, new_t)
+                    add_state(state) 
+ 
     return max_geode
 
 def parse_file(path):
@@ -130,26 +169,6 @@ def parse_file(path):
         ]
 
     return P
-
-        # P[r[0]] = {
-        #     ORE: {
-        #         ORE: r[1]
-        #         },
-        #     CLAY: {
-        #         ORE: r[2]
-        #     },
-        #     OBSIDIAN: {
-        #         ORE: r[3],
-        #         CLAY: r[4]
-        #     },
-        #     GEODE: {
-        #         ORE: r[5],
-        #         OBSIDIAN: r[6]
-        #     }
-        # }
-        # Examples
-        # print(P[1][ORE]) # costs of ORE ROBOT building for project 1
-        # print(P[1][ORE].keys()) # index of minerals needed to built ORE ROBOT for project 1
 
 if __name__ == "__main__":
     main()
