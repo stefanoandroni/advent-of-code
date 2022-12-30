@@ -3,7 +3,7 @@
 from collections import deque
 import re
 
-INPUT_FILE_PATH = 'data/test-input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 ORE = 0 
 CLAY = 1
