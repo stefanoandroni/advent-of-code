@@ -44,13 +44,13 @@ def main():
             for z in range(0, z_max + 2):
                 S.add((x, y, z))
 
-    # 3) S ranges with extremes included per axis
+    # 3) L: axis' limit on S - > S ranges with extremes included per axis
     x_max, y_max, z_max  = get_max_coordinates(S.copy())
     x_min, y_min, z_min = get_min_coordinates(S.copy())
 
-    L = {'x': [x_min, x_max], 'y': [y_min, y_max], 'z': [z_min, z_max]} # L: axis' limit on S
+    L = {'x': [x_min, x_max], 'y': [y_min, y_max], 'z': [z_min, z_max]}
 
-    # 3) Calulcate # of faces of external surface
+    # 4) Calulcate # of faces of external surface
     n = calculate_external_surface()
     print(n) # <Part 2>
     
