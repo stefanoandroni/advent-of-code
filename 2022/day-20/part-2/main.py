@@ -1,4 +1,4 @@
-INPUT_FILE_PATH = '../data/test-input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 KEY = 811_589_153
 TIMES = 10
@@ -8,62 +8,37 @@ Y_C = 2_000
 Z_C = 3_000
 
 def main():
-    global N
-    L = [x * KEY for x in parse_file(INPUT_FILE_PATH)] # L: input list of numbers
-    N = len(L) # N: len of L = len of M = len of I
+    global L
 
-    R = mixing(L) # M: resulting mixed list
-    C = get_coordinates(R) # C: list of coordinates
+    L = [(x * KEY, i) for i, x in enumerate(parse_file(INPUT_FILE_PATH))] # L: list of tuple (num, index)
+    
+    R = mixing(L) # R: resulting mixed list of tuple (num, index)
 
-    print(sum(C)) # <Part 1>
+    C = get_coordinates(R) # C list of 3 int (3 coordinates)
+
+    print(sum(C)) # <Part 2>
 
 def mixing(L):
+    M = L.copy()
 
-    def get_list_index(index):
-        div = index // N
-        r = index % N
-        return r + div
+    for _ in range(TIMES):
+        for i in range(len(M)):
+            # Pop tuple from list
+            index = L.index(M[i])
+            L.pop(index)
+            # Insert in list tuple (updated_num, index)
+            L.insert((index + M[i][0]) % len(L), M[i])
 
-    M = L.copy() # M: mixed list
-    # I[k] = index of k-element of L list in M list
+    return L
 
-    for o in range(TIMES):
-        I = [x for x in range(N)]
-        for i in range(len(I)):
-            #print(o,i)
-            
-            # 1) Get and move the number from the list based on its value
-            index = I[i]
-            n = M.pop(index)
-            new_index = get_list_index(index + n)
-            
-            if new_index == 0:
-                new_index = N - 1
-
-            M.insert(new_index, n)
-        
-            # 2) Update support array I
-            if new_index > index:
-                    for j in range(0, len(I)):
-                        if I[j] in range(index + 1, new_index + 1): # index + 1
-                            I[j] -= 1
-            else:
-                    for j in range(0, len(I)):
-                        if I[j] in range(new_index, index):
-                            I[j] += 1
-            I[i] = new_index
-    
-    
-    return M 
-
-
-def get_coordinates(M):
+def get_coordinates(L):
 
     def get_coordinate(positions):
-        zero_pos_index = M.index(0)
-        tmp1 = positions - (len(M) - zero_pos_index - 1)
-        r = tmp1 % len(M)
-        return M[r - 1]
+        for index, x in enumerate(L):
+            if x[0] == 0:
+                zero_pos_index = index
+                break
+        return L[(zero_pos_index + positions) % len(L)][0]
 
     x = get_coordinate(X_C)
     y = get_coordinate(Y_C)
