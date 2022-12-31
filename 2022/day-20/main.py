@@ -1,15 +1,19 @@
 INPUT_FILE_PATH = 'data/input.txt'
 
-X_C  = 1_000
-Y_C  = 2_000
-Z_C  = 3_000
+X_C = 1_000
+Y_C = 2_000
+Z_C = 3_000
 
 
 def main():
     global N
-    L = parse_file(INPUT_FILE_PATH) # L )
-    N = len(L)
-    R = mixing(L)
+    L = parse_file(INPUT_FILE_PATH) # L: input list of numbers
+    N = len(L) # N: len of L = len of M = len of I
+
+    R = mixing(L) # M: resulting mixed list
+    C = get_coordinates(R) # C: list of coordinates
+
+    print(sum(C)) # <Part 1>
 
 def mixing(L):
 
@@ -23,7 +27,7 @@ def mixing(L):
 
     for i in range(len(I)):
         
-        # 1) Get and move number from list
+        # 1) Get and move the number from the list based on its value
         index = I[i]
         n = M.pop(index)
         new_index = get_list_index(index + n)
@@ -43,9 +47,9 @@ def mixing(L):
                     if I[j] in range(new_index, index):
                         I[j] += 1
         I[i] = new_index
+    
+    return M 
 
-    C = get_coordinates(M)
-    print(sum(C)) # <Part 1>
 
 def get_coordinates(M):
 
