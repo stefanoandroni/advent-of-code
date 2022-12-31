@@ -1,9 +1,8 @@
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 X_C = 1_000
 Y_C = 2_000
 Z_C = 3_000
-
 
 def main():
     global N
@@ -40,7 +39,7 @@ def mixing(L):
         # 2) Update support array I
         if new_index > index:
                 for j in range(0, len(I)):
-                    if I[j] in range(index + 1, new_index + 1):
+                    if I[j] in range(index, new_index + 1): # index + 1
                         I[j] -= 1
         else:
                 for j in range(0, len(I)):
