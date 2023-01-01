@@ -13,9 +13,7 @@ def main():
     global L
 
     L = [(x * KEY, i) for i, x in enumerate(parse_file(INPUT_FILE_PATH))] # L: list of tuple (num, index)
-    
     R = mixing(L) # R: resulting mixed list of tuple (num, index)
-
     C = get_coordinates(R) # C: list of 3 int (3 coordinates)
 
     print(sum(C)) # <Part 2>
