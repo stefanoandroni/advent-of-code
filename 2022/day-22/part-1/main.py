@@ -1,29 +1,30 @@
 import re
 from collections import deque
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 R = 'R'
 L = 'L'
 
 def main():
     global M
-    M, PM, PT, P = parse_file(INPUT_FILE_PATH) # M: matrix map, PT: path turn, PM: path move, S: starting position
+    M, PM, PT, P = parse_file(INPUT_FILE_PATH) # M: matrix map, PT: path turn, PM: path move, P: starting position
 
     # Starting settings
     p = P # p: starting position
     d = Direction(Direction.RIGHT) # d: starting direction
 
     while PM:
+        # 1) Pop
         pm = PM.popleft()
         if PT:
             pt = PT.popleft()
         else: # (?) strange case (with test-input.txt)
             break
 
-        # Move
+        # 2) Move
         p = move(p, pm, d)
-        # Rotate
+        # 3) Rotate
         d.rotate(pt)
 
     # print(p)
