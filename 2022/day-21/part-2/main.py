@@ -1,7 +1,7 @@
 import sympy
 import re
 
-INPUT_FILE_PATH = '../data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 HUMAN_ID = 'humn'
 ROOT_ID = 'root'

@@ -1,6 +1,6 @@
 # not optimized (bad implementation) (TODO - recursive - if vis_matrix[r][c]=True and matrix[r][c]<current_val: return True)
 
-INPUT_FILE_PATH = '../data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:

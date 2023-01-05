@@ -1,6 +1,6 @@
 # Approach: using a support array to link the indexes of the original list to those of the mixed list
 
-INPUT_FILE_PATH = '../data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 X_C = 1_000
 Y_C = 2_000

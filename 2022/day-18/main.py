@@ -2,7 +2,7 @@ from collections import deque
 from pprint import pprint
 
 #  Q? Count the number of sides of each cube that are not immediately connected to another cube.
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = 'data/test-input.txt'
 
 # Lamda function te get all cube's sides
 sides = lambda x, y, z: {(x+1, y, z), (x-1, y, z), (x, y+1, z), (x, y-1, z), (x, y, z+1), (x, y, z-1)}

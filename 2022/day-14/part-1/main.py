@@ -1,4 +1,4 @@
-INPUT_FILE_PATH = '../data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 START_POINT = (0, 500)
 

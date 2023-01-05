@@ -1,7 +1,7 @@
 from collections import deque
 from math import lcm
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = 'data/test-input.txt'
 
 dirs = [(0, -1), (0, 1), (-1, 0), (1, 0), (0, 0)] # dirs:{up, down, left, rigth, none}
 dirs_symb = ['^', 'v', '<', '>']

@@ -3,7 +3,7 @@ import re
 # Assumptions
 # > the monkey's id matches the index of its location in the file
 
-INPUT_FILE_PATH = '../data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 ROUNDS = 10_000
 

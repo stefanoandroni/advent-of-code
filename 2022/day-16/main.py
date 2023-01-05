@@ -2,7 +2,7 @@ import re
 from collections import deque, defaultdict
 from itertools import permutations
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = 'data/test-input.txt'
 
 START_VALVE = "AA"
 

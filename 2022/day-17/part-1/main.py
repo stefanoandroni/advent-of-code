@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 INPUT_FILE_PATH_ROCK = '../data/rocks.txt'
-INPUT_FILE_PATH_JET = '../data/jet-pattern.txt'
+INPUT_FILE_PATH_JET = '../data/test-jet-pattern.txt'
 
 STOP = 2022
 

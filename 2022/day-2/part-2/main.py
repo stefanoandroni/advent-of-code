@@ -1,6 +1,6 @@
 from enum import Enum
 
-INPUT_FILE_PATH = '../data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:

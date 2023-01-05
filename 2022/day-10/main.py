@@ -1,5 +1,5 @@
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = 'data/test-input.txt'
 
 CRT_WIDTH = 40
 CRT_HEIGTH = 6

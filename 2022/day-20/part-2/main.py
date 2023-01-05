@@ -1,6 +1,6 @@
 # Approach: keep in memory during execution each number paired to its position in the array (list of tuples (num, index))
 
-INPUT_FILE_PATH = '../data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 X_C = 1_000
 Y_C = 2_000

@@ -1,6 +1,6 @@
 import re
 
-INPUT_FILE_PATH = '../data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 C_min = 0
 C_max = 4_000_000

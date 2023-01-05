@@ -1,6 +1,6 @@
 # not optimized algorithms (use tree)
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = 'data/test-input.txt'
 
 TOTAL_SPACE = 70_000_000
 UPDATE_SIZE = 30_000_000

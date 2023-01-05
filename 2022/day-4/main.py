@@ -1,7 +1,7 @@
 
 import re
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = 'data/test-input.txt'
 
 min_val = 1 # 1
 max_val = 99 # 10

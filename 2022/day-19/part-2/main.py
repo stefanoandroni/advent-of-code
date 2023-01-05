@@ -5,7 +5,7 @@ from collections import deque
 from math import prod
 import re
 
-INPUT_FILE_PATH = '../data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 MAX_PROJECT_INDEX = 3
 
