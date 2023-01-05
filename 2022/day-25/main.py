@@ -9,7 +9,7 @@ def main():
     input_SNAFU_list = parse_file(INPUT_FILE_PATH)
 
     # SNAFU to DECIMAL
-    DECIMAL_list = list_from_SNAFU_to_decimal(input_SNAFU_list)
+    DECIMAL_list = list_from_SNAFU_to_DECIMAL(input_SNAFU_list)
 
     DECIMAL_list_sum = sum (DECIMAL_list)
 
@@ -28,7 +28,7 @@ def from_DECIMAL_to_SNAFU(DECIMAL_num):
         n //= BASE_number
     return r[::-1]
 
-def list_from_SNAFU_to_decimal(ls):
+def list_from_SNAFU_to_DECIMAL(ls):
     # Iterative function
 
     decimal_list = []
@@ -37,7 +37,7 @@ def list_from_SNAFU_to_decimal(ls):
     return decimal_list
 
 def from_SNAFU_to_DECIMAL(snafu_nummber_symbols): # TODO: bad function
-    snafu_number_values = get_snafu_values(snafu_nummber_symbols)
+    snafu_number_values = get_SNAFU_values(snafu_nummber_symbols)
     i = len(snafu_number_values) - 1
     
     k = 0
@@ -49,7 +49,7 @@ def from_SNAFU_to_DECIMAL(snafu_nummber_symbols): # TODO: bad function
     
     return r
 
-def get_snafu_values(snafu_number_symbols):
+def get_SNAFU_values(snafu_number_symbols):
     s = []
     for i in snafu_number_symbols:
         s.append(SNAFU_values[SNAFU_symbols.index(i)])
