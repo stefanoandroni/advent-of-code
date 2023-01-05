@@ -3,7 +3,7 @@ from math import lcm
 
 INPUT_FILE_PATH = 'data/input.txt'
 
-dirs = [(0, -1), (0, 1), (-1, 0), (1, 0), (0, 0)] # dirs:{up, down, left, rigth}
+dirs = [(0, -1), (0, 1), (-1, 0), (1, 0), (0, 0)] # dirs:{up, down, left, rigth, none}
 dirs_symb = ['^', 'v', '<', '>']
 
 def main():
@@ -14,8 +14,7 @@ def main():
     # period: maximum number of different combinations (states)
     B, s, e, period, max_x, max_y = parse_file(INPUT_FILE_PATH) 
 
-    BS = get_states(B, period) #BS: all possible combinations/states for B (set of ((x,y), t)) -> B[t] = blizards positions at time t
-
+    BS = get_states(B, period) #BS: all possible combinations/states for B (set of ((x,y), dir)) -> B[t] = blizards positions at time t
     # CG = get_clear_ground()  # CG: clear grounds -> CG[t] = clear grounds positions at time t # TODO: more efficient using this? # CG of << # of S
 
     t = get_best_time(s, e) 
@@ -118,10 +117,3 @@ def parse_file(path):
 
 if __name__ == "__main__":
     main()
-
-# import time
-
-# if __name__ == "__main__":
-#     start_time = time.time()
-#     main()
-#     print("--- %s seconds ---" % (time.time() - start_time))
