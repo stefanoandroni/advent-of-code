@@ -1,17 +1,17 @@
 from collections import deque
 from math import lcm
 
-INPUT_FILE_PATH = 'data/test-input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 dirs = [(0, -1), (0, 1), (-1, 0), (1, 0), (0, 0)] # dirs:{up, down, left, rigth, none}
 dirs_symb = ['^', 'v', '<', '>']
 
 def main():
     global BS, max_x, max_y, period, s
-    # B: blizzards states -> ((x,y), d) [d: index of dir]
+    # B: blizzards states -> B[i]: blizard state at period time i -> list of ((x,y), d) [d: index of direction]
     # s: start pos -> (x, y)
     # e: end pos -> (x, y)
-    # period: maximum number of different combinations (states)
+    # period: maximum number of blizzards different combinations (states)
     B, s, e, period, max_x, max_y = parse_file(INPUT_FILE_PATH) 
 
     BS = get_states(B, period) #BS: all possible combinations/states for B (set of ((x,y), dir)) -> B[t] = blizards positions at time t
