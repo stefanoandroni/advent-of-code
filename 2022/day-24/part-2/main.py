@@ -1,33 +1,37 @@
 from collections import deque
 from math import lcm
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 dirs = [(0, -1), (0, 1), (-1, 0), (1, 0), (0, 0)] # dirs:{up, down, left, rigth, none}
 dirs_symb = ['^', 'v', '<', '>']
 
 def main():
     global BS, max_x, max_y, period, s
-    # B: blizzards states -> ((x,y), d) [d: index of dir]
+    # B: blizzards states -> B[i]: blizard state at period time i -> list of ((x,y), d) [d: index of direction]
     # s: start pos -> (x, y)
     # e: end pos -> (x, y)
-    # period: maximum number of different combinations (states)
+    # period: maximum number of different blizzards combinations (states)
     B, s, e, period, max_x, max_y = parse_file(INPUT_FILE_PATH) 
 
     BS = get_states(B, period) #BS: all possible combinations/states for B (set of ((x,y), dir)) -> B[t] = blizards positions at time t
     # CG = get_clear_ground()  # CG: clear grounds -> CG[t] = clear grounds positions at time t # TODO: more efficient using this? # CG of << # of S
 
     t = get_best_time(s, e) 
-    print(t) # <Part 1>
+    print(t) # <Part 2>
 
 # iterative BFS
 def get_best_time(sp, ep): # sp: start position, ep: end position
+    SP = sp
+    EP = ep
     queue = deque() # entry -> ((current_pos), minutes) where current_pos = (x, y)
     V = set() # V: visited states
 
+    tp = sp # tp: target pos
     m = 0
-    queue.append((sp, m)) 
+    queue.append((tp, m)) 
 
+    ride = 1
     while queue:
         cp, m = item = queue.popleft()
 
@@ -35,7 +39,23 @@ def get_best_time(sp, ep): # sp: start position, ep: end position
             continue
         V.add(item)
 
-        if cp == ep:
+        # Bad three if-statemets
+        # IF1
+        if ride == 1 and cp == EP:
+            sp = EP
+            ep = SP
+            ride += 1
+            queue.clear()
+            V = set()
+        # IF2
+        if ride == 2 and cp == SP:
+            sp = SP
+            ep = EP
+            ride +=1
+            queue.clear()
+            V = set()
+        # IF3
+        if ride == 3 and cp == EP:
             return m
 
         for d in dirs:
