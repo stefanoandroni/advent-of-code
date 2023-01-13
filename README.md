@@ -9,7 +9,9 @@
 
 <h2>Years</h2>
 <ul>
-  <li><a href="/2022">2022</a> - [Python] - 50/50 stars  </li>
+  <li><a href="/2022">2022</a> - [Python] - 50/50 stars <br>
+      <em>(first AOC, learning python)</em>
+  </li>
 </ul>
 
 <em> <b>Notes</b> Input puzzles are not shared (only example puzzle 'test-input.txt') </em>
