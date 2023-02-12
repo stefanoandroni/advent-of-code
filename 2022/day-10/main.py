@@ -1,4 +1,3 @@
-
 INPUT_FILE_PATH = 'data/test-input.txt'
 
 CRT_WIDTH = 40
@@ -6,11 +5,9 @@ CRT_HEIGTH = 6
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
-        file = f.read().strip()
+        lines = f.read().strip().split('\n')
 
     # Part 1 ---------------------------------------------------------------
-    lines = file.split('\n')
-
     X = [1] # X[i] is the value of X at the end of cycle i (cycle from 1 to N)(X[0] only for inizialization) 
        
     for line in lines:

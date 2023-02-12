@@ -104,7 +104,7 @@ def get_consistent_pos(x, y):
     return (x, y)
 
 def parse_file(path):
-    with open(INPUT_FILE_PATH, 'r') as f:
+    with open(path, 'r') as f:
         file = f.read().strip()
 
     lines = file.split('\n')

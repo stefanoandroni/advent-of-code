@@ -6,17 +6,17 @@ def main():
     with open(INPUT_FILE_PATH, 'r') as f:
         stacks_body, moves_body = f.read().split("\n\n")
         
-        stacks_list = create_stacks(stacks_body)
-        # print(stacks_list)
+    stacks_list = create_stacks(stacks_body)
+    # print(stacks_list)
 
-        moves_list = create_moves(moves_body)
-        # print(moves_list)
+    moves_list = create_moves(moves_body)
+    # print(moves_list)
 
-        stacks_movies_applied_list = apply_moves(stacks_list, moves_list)
-        # print(stacks_movies_applied_list)
-        
-        top_items = get_top_items_string(stacks_movies_applied_list)
-        print(top_items) # <Part 1>
+    stacks_movies_applied_list = apply_moves(stacks_list, moves_list)
+    # print(stacks_movies_applied_list)
+    
+    top_items = get_top_items_string(stacks_movies_applied_list)
+    print(top_items) # <Part 1>
 
 def get_top_items_string(stacks_list):
     top_items_string = ""

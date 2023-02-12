@@ -45,7 +45,7 @@ def get_coordinates(L):
     return [x, y, z]
 
 def parse_file(path):
-    with open(INPUT_FILE_PATH, 'r') as f:
+    with open(path, 'r') as f:
         file = f.read().strip()
     L = [int(x) for x in file.split('\n')]
     return L

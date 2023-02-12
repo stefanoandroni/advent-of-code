@@ -109,7 +109,7 @@ class Direction:
             return [0, 1]
 
 def parse_file(path):
-    with open(INPUT_FILE_PATH, 'r') as f:
+    with open(path, 'r') as f:
         m, p = f.read().split('\n\n')
     lines = m.split('\n')
     

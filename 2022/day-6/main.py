@@ -1,19 +1,18 @@
-
 INPUT_FILE_PATH = 'data/test-input.txt'
-# INPUT_FILE_PATH = 'data/test-input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
         signal = f.read()
-        # only for test
-        # test_index = 4
-        # signal = signal.split("\n")[test_index]
 
-        start_of_packet_marker_index = find_start_of_packet_index(signal, 4)
-        print(start_of_packet_marker_index) # <Part 1>
+    # only for test
+    # test_index = 4
+    # signal = signal.split("\n")[test_index]
 
-        start_of_packet_marker_index = find_start_of_packet_index(signal, 14)
-        print(start_of_packet_marker_index) # <Part 2>
+    start_of_packet_marker_index = find_start_of_packet_index(signal, 4)
+    print(start_of_packet_marker_index) # <Part 1>
+
+    start_of_packet_marker_index = find_start_of_packet_index(signal, 14)
+    print(start_of_packet_marker_index) # <Part 2>
 
 def find_start_of_packet_index(string, window_length):  # TODO Not Optimized Alghoritm
     # window_length = 4

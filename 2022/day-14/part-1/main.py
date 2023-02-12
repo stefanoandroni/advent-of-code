@@ -6,11 +6,8 @@ def main():
     global S
     global R
     global max_rock_depth
-
-    with open(INPUT_FILE_PATH, 'r') as f:
-        file = f.read().strip()
     
-    P = get_paths(file) # path list
+    P = get_paths_from_file(INPUT_FILE_PATH) # path list
     R = get_rock_points(P) # rock points set
     max_rock_depth = max([x for x, y in R])
     
@@ -70,8 +67,9 @@ def get_rock_points(paths):
             i += 1
     return R
 
-def get_paths(file):
-    lines = file.split('\n')
+def get_paths_from_file(path):
+    with open(path, 'r') as f:
+        lines = f.read().strip().split('\n')
     P = []
     for line in lines:
         C = [(int(x.split(',')[1]), int(x.split(',')[0])) for x in line.split(' -> ')] 

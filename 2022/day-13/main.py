@@ -28,6 +28,7 @@ def main():
    
     d_p1 = pairs.index([[2]]) + 1
     d_p2 = pairs.index([[6]]) + 1
+    
     d_key = d_p1 * d_p2
     print(d_key) # <Part 2>
 

@@ -155,7 +155,7 @@ def get_max_num_of_geodes(project):
 
 def parse_file(path):
     P = {}
-    with open(INPUT_FILE_PATH, 'r') as f:
+    with open(path, 'r') as f:
         projects_lines = f.read().strip().split('\n')
 
     pattern = r'(\d+)'

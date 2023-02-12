@@ -56,7 +56,7 @@ def get_SNAFU_values(snafu_number_symbols):
     return s
 
 def parse_file(path):
-    with open(INPUT_FILE_PATH, 'r') as f:
+    with open(path, 'r') as f:
         lines = f.read().strip().split('\n')
     return lines
 

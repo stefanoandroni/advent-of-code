@@ -15,11 +15,8 @@ STEP_TIME = 1
 def main():
     global N, G, V
 
-    with open(INPUT_FILE_PATH, 'r') as f:
-        file = f.read().strip()
-
     # Parse file
-    V = parse_file(file) # V: valves id -> rate: int,  to: [id, id, ...]
+    V = parse_file(INPUT_FILE_PATH) # V: valves id -> rate: int,  to: [id, id, ...]
     
     # Reduce problem
     N, G = reduce_graph(V) # N: nodes, G: graph matrix
@@ -120,9 +117,10 @@ def get_graph_matrix(dict):
 
     return matrix
 
-def parse_file(file):
+def parse_file(path):
+    with open(path, 'r') as f:
+        lines = f.read().strip().split('\n')
     V = {}
-    lines = file.split('\n')
     rgx = re.compile(r"^Valve (\w{2}) has flow rate=(\d+); tunnel[s]? lead[s]? to valve[s]?(.*)")
 
     for line in lines:

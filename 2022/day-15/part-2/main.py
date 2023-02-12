@@ -14,13 +14,10 @@ import re
 INPUT_FILE_PATH = '../data/test-input.txt'
 
 C_min = 0
-C_max = 4_000_000
+C_max = 20 #4_000_000
 
 def main():
-    with open(INPUT_FILE_PATH, 'r') as f:
-        file = f.read().strip()
-
-    S, B, D = parse_file(file)  # S: sensors -> (x,y) # B: beacons -> (x,y) # D: distances (D[i] = distance between S[i] and B[i])
+    S, B, D = parse_file(INPUT_FILE_PATH)  # S: sensors -> (x,y) # B: beacons -> (x,y) # D: distances (D[i] = distance between S[i] and B[i])
 
     # Calculate the q (y = mx + q, m in {1, -1}) of the straight lines of the edges of the rhombus
     M_pos, M_neg = get_borders(S, D)
@@ -60,11 +57,13 @@ def get_manhattan_distance(a, b):
     x2, y2 = b
     return abs(x1 - x2) + abs(y1 - y2)
     
-def parse_file(file): #(c,r)
+def parse_file(path): #(c,r)
+    with open(path, 'r') as f:
+        lines = f.read().strip().split('\n')
     S = []
     B = []
     D = []
-    for line in file.split('\n'):
+    for line in lines:
         matches = re.findall(r'Sensor at x=(-?\d+), y=(-?\d+): closest beacon is at x=(-?\d+), y=(-?\d+)', line)
         for match in matches:
             xs, ys, xb, yb = match

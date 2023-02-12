@@ -3,21 +3,20 @@
 INPUT_FILE_PATH = '../data/test-input.txt'
 
 def main():
-    with open(INPUT_FILE_PATH, 'r') as f:
-        matrix = get_matrix_from_file(f) # data matrix
-        # print(*matrix, sep = "\n") 
-        l = len(matrix)
+    matrix = get_matrix_from_file(INPUT_FILE_PATH) # data matrix
+    # print(*matrix, sep = "\n") 
+    l = len(matrix)
 
-        vis_matrix = [[False for _ in range(l)] for _ in range(l)] # visibility matrix (False by default)
-        # print(*vis_matrix, sep = "\n") 
+    vis_matrix = [[False for _ in range(l)] for _ in range(l)] # visibility matrix (False by default)
+    # print(*vis_matrix, sep = "\n") 
 
-        for r in range(l):
-            for c in range(l):
-                vis_matrix[r][c] = check_visibility(r, c, matrix)
-        # print(*vis_matrix, sep = "\n") 
+    for r in range(l):
+        for c in range(l):
+            vis_matrix[r][c] = check_visibility(r, c, matrix)
+    # print(*vis_matrix, sep = "\n") 
 
-        visible_count = count_true_in_matrix(vis_matrix)
-        print(visible_count) # <Part 1>
+    visible_count = count_true_in_matrix(vis_matrix)
+    print(visible_count) # <Part 1>
 
 def check_visibility(r, c, matrix):
     l = len(matrix)
@@ -58,10 +57,10 @@ def count_true_in_matrix(matrix):
                 count += 1
     return count
 
-def get_matrix_from_file(file):
-    f = file.read().strip()
+def get_matrix_from_file(path):
+    with open(path, 'r') as f:
+        lines = f.read().strip().split('\n')
     matrix = []
-    lines = f.split('\n')
     for line in lines:
         matrix.append([eval(x) for x in list(line)])
     return matrix

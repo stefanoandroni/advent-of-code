@@ -1,21 +1,20 @@
 INPUT_FILE_PATH = '../data/test-input.txt'
 
 def main():
-    with open(INPUT_FILE_PATH, 'r') as f:
-        matrix = get_matrix_from_file(f) # data matrix
-        # print(*matrix, sep = "\n") 
-        l = len(matrix)
+    matrix = get_matrix_from_file(INPUT_FILE_PATH) # data matrix
+    # print(*matrix, sep = "\n") 
+    l = len(matrix)
 
-        scenic_score_matrix = [[None for _ in range(l)] for _ in range(l)] # scenic score matrix
-        # print(*scenic_score_matrix, sep = "\n") 
+    scenic_score_matrix = [[None for _ in range(l)] for _ in range(l)] # scenic score matrix
+    # print(*scenic_score_matrix, sep = "\n") 
 
-        for r in range(l):
-            for c in range(l):
-                scenic_score_matrix[r][c] = get_score(r, c, matrix)
-        # print(*scenic_score_matrix, sep = "\n") 
+    for r in range(l):
+        for c in range(l):
+            scenic_score_matrix[r][c] = get_score(r, c, matrix)
+    # print(*scenic_score_matrix, sep = "\n") 
 
-        max_scenic_score = get_max_in_matrix(scenic_score_matrix) # (can be calculated during matrix construction)
-        print(max_scenic_score) # <Part 2>
+    max_scenic_score = get_max_in_matrix(scenic_score_matrix) # (can be calculated during matrix construction)
+    print(max_scenic_score) # <Part 2>
 
 def get_score(r, c, matrix):
     l = len(matrix)
@@ -59,10 +58,10 @@ def get_max_in_matrix(matrix):
                 max_val = val
     return max_val
 
-def get_matrix_from_file(file):
-    f = file.read().strip()
+def get_matrix_from_file(path):
+    with open(path, 'r') as f:
+        lines = f.read().strip().split('\n')
     matrix = []
-    lines = f.split('\n')
     for line in lines:
         matrix.append([eval(x) for x in list(line)])
     return matrix

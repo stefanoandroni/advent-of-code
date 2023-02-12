@@ -1,27 +1,26 @@
-from math import sqrt
-
 # TODO: work with vector!
+
+from math import sqrt
 
 INPUT_FILE_PATH = '../data/test-input.txt'
 
 def main():
-    with open(INPUT_FILE_PATH, 'r') as f:
-        global tail_pos_list
-        tail_pos_list = []
+    global tail_pos_list
+    tail_pos_list = []
 
-        moves = get_moves_from_file(f)
-        # print(moves)
-        
-        starting_pos = [0,0]
-        head_pos = starting_pos.copy()
-        tail_pos = starting_pos.copy()
+    moves = get_moves_from_file(INPUT_FILE_PATH)
+    # print(moves)
+    
+    starting_pos = [0,0]
+    head_pos = starting_pos.copy()
+    tail_pos = starting_pos.copy()
 
-        for move in moves:
-            head_pos, tail_pos = make_move(head_pos, tail_pos, move) 
+    for move in moves:
+        head_pos, tail_pos = make_move(head_pos, tail_pos, move) 
 
-        tail_pos_set = {tuple(x) for x in tail_pos_list}
-        # print_visited_matrix(tail_pos_set)
-        print(len(tail_pos_set)) # <Part 1>
+    tail_pos_set = {tuple(x) for x in tail_pos_list}
+    # print_visited_matrix(tail_pos_set)
+    print(len(tail_pos_set)) # <Part 1>
 
 def make_move(head_pos, tail_pos, move):
     dir = move[0] # direction
@@ -76,9 +75,10 @@ def is_adjacent(pos1, pos2): # bad function
     distance = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
     return distance == 1 or distance == 0 or distance == sqrt((1 - 0) ** 2 + (1 - 0) ** 2) 
 
-def get_moves_from_file(file):
-    f = file.read().strip()
-    return [[x.split(" ")[0], int(x.split(" ")[1])] for x in f.split('\n')]
+def get_moves_from_file(path):
+    with open(path, 'r') as f:
+        lines = f.read().strip().split('\n')
+    return [[x.split(" ")[0], int(x.split(" ")[1])] for x in lines]
 
 class Directions:
     UP = 'U'

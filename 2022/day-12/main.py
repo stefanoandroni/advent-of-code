@@ -1,7 +1,7 @@
 # heightmap of the surrounding area
-# a: lowest elevation ... z: highest elevation
-# S: current position
-# E: best_signal position
+#   a: lowest elevation ... z: highest elevation
+#   S: current position
+#   E: best_signal position
 
 # from S to E in few steps as possible
 # one step: UP, DOWN, LEFT, RIGTH but elevation(destination_square) <= elevation(current_square) + 1
@@ -11,22 +11,21 @@ from collections import deque
 INPUT_FILE_PATH = 'data/test-input.txt'
 
 def main():
-    with open(INPUT_FILE_PATH, 'r') as f:
-        global matrix
+    global matrix
 
-        matrix, starting_node, target_node = get_matrix_from_file(f)
-        # print(*matrix, sep='\n')
-        # print("starting_pos", starting_pos)
-        # print("target_pos", target_pos)
+    matrix, starting_node, target_node = get_matrix_from_file(INPUT_FILE_PATH)
+    # print(*matrix, sep='\n')
+    # print("starting_pos", starting_pos)
+    # print("target_pos", target_pos)
 
-        edges = get_edges(matrix)
-        # print(edges)
+    edges = get_edges(matrix)
+    # print(edges)
 
-        min_distance = get_shortest_path_length(starting_node, target_node, edges, 1)
-        print(min_distance) # <Part 1>
+    min_distance = get_shortest_path_length(starting_node, target_node, edges, 1)
+    print(min_distance) # <Part 1>
 
-        min_distance = get_shortest_path_length(starting_node, target_node, edges, 2)
-        print(min_distance) # <Part 2>
+    min_distance = get_shortest_path_length(starting_node, target_node, edges, 2)
+    print(min_distance) # <Part 2>
 
 def get_shortest_path_length(starting_node, target_node, edges, part):
     # (with BFS)
@@ -73,11 +72,12 @@ def is_valid_edge(current_node, dest_node):
             return True
     return False
 
-def get_matrix_from_file(file):
+def get_matrix_from_file(path):
+    with open(path, 'r') as f:
+        lines = f.read().strip().split('\n')
+
     matrix = []
 
-    f = file.read().strip()
-    lines = f.split('\n')
     for r, line in enumerate(lines):
         row = []
         for c, a in enumerate(line):

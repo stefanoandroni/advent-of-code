@@ -1,20 +1,20 @@
-
 INPUT_FILE_PATH = '../data/test-input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
-        str_list = [x for x in f.read().split("\n")]
-        half_splitted_list = [half_split_str(x) for x in str_list]
-        # checkHalfSplittedList(str_list, half_splitted_list)
-        common_item_list = [get_one_common_char(x[0], x[1]) for x in half_splitted_list]
-        priority_common_item_list = [get_priority(x) for x in common_item_list]
-        
-        # print(get_priority("A"))
-        # print(get_priority("Z"))
-        # print(get_priority("a"))
-        # print(get_priority("z"))
+        lines = [x for x in f.read().split("\n")]
+    
+    half_splitted_list = [half_split_str(x) for x in lines]
+    # checkHalfSplittedList(lines, half_splitted_list)
+    common_item_list = [get_one_common_char(x[0], x[1]) for x in half_splitted_list]
+    priority_common_item_list = [get_priority(x) for x in common_item_list]
+    
+    # print(get_priority("A"))
+    # print(get_priority("Z"))
+    # print(get_priority("a"))
+    # print(get_priority("z"))
 
-        print(sum(priority_common_item_list)) # <Part 1>
+    print(sum(priority_common_item_list)) # <Part 1>
 
 def get_priority(char):
     # a .. z from 1 to 26

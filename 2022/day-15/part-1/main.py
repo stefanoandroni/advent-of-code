@@ -1,13 +1,10 @@
 import re
 
 INPUT_FILE_PATH = '../data/test-input.txt'
-Y = 2000000
+Y = 10 #2000000
 
 def main():
-    with open(INPUT_FILE_PATH, 'r') as f:
-        file = f.read().strip()
-
-    S, B = parse_file(file)  # S: sensors -> (x,y) # B: beacons -> (x,y)
+    S, B = parse_file(INPUT_FILE_PATH)  # S: sensors -> (x,y) # B: beacons -> (x,y)
     I = get_intervals(S, B, Y) # I: intervals (of not allowed beacon positions) -> (x_start, x_end)
 
     R = set() # R: result -> (x0, x1, x2, .., xn)
@@ -36,10 +33,12 @@ def get_manhattan_distance(a, b):
     x2, y2 = b
     return abs(x1 - x2) + abs(y1 - y2)
     
-def parse_file(file): #(c,r)
+def parse_file(path): #(c,r)
+    with open(path, 'r') as f:
+        lines = f.read().strip().split('\n')
     S = []
     B = []
-    for line in file.split('\n'):
+    for line in lines:
         matches = re.findall(r'Sensor at x=(-?\d+), y=(-?\d+): closest beacon is at x=(-?\d+), y=(-?\d+)', line)
         for match in matches:
             xs, ys, xb, yb = match

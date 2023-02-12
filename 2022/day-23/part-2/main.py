@@ -108,7 +108,7 @@ def has_adjacent(elf):
     return False
 
 def parse_file(path):
-    with open(INPUT_FILE_PATH, 'r') as f:
+    with open(path, 'r') as f:
         lines = f.read().strip().split('\n')
         EL = set()
         for y, line in enumerate(lines):

@@ -1,16 +1,14 @@
-
 INPUT_FILE_PATH = '../data/test-input.txt'
 
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
-        str_list = [x for x in f.read().split("\n")]       
+        lines = [x for x in f.read().split("\n")]       
 
-        group_list = [[str_list[i], str_list[i+1], str_list[i+2]] for i in range(len(str_list))[::3]]
-        group_badge_list = [get_common_item(group[0], group[1], group[2]) for group in group_list]
-        
-        priority_common_group_list = [get_priority(x) for x in group_badge_list]
+    group_list = [[lines[i], lines[i+1], lines[i+2]] for i in range(len(lines))[::3]]
+    group_badge_list = [get_common_item(group[0], group[1], group[2]) for group in group_list]
+    priority_common_group_list = [get_priority(x) for x in group_badge_list]
 
-        print(sum(priority_common_group_list)) # <Part 2>
+    print(sum(priority_common_group_list)) # <Part 2>
 
 def get_common_item(str1, str2, str3):
     str1_set = set(str1)

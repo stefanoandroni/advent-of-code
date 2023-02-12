@@ -5,8 +5,10 @@ INPUT_FILE_PATH = '../data/test-input.txt'
 def main():
     with open(INPUT_FILE_PATH, 'r') as f:
         round_list = [x.split(" ") for x in f.read().split("\n")]
-        score_list = [get_score(x) for x in round_list]
-        print(sum(score_list)) # <Part 1>
+    
+    score_list = [get_score(x) for x in round_list]
+    
+    print(sum(score_list)) # <Part 1>
 
 def get_score(round):
     opponent_shape = get_shape(round[0])
@@ -52,7 +54,6 @@ class Shapes(str, Enum):
 if __name__ == "__main__":
     main()
 
-
 # class round():    
 #     def __init__(self, opponent_shape, your_shape) -> None:
 #         self.opponent_shape = opponent_shape
@@ -68,7 +69,6 @@ if __name__ == "__main__":
 # lost                  0
 # draw                  3 
 # won                   6
-
 
 # input
 # opponent - you

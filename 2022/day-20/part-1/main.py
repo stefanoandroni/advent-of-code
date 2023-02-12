@@ -68,7 +68,7 @@ def get_coordinates(M):
 
 def parse_file(path):
     L = []
-    with open(INPUT_FILE_PATH, 'r') as f:
+    with open(path, 'r') as f:
         L = [int(x) for x in f.read().strip().split('\n')]
     return L
 

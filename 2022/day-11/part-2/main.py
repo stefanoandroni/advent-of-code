@@ -10,10 +10,7 @@ ROUNDS = 10_000
 def main():
     global LCM
 
-    with open(INPUT_FILE_PATH, 'r') as f:
-        file = f.read().strip()
-
-    monkeys = parse_file(file)
+    monkeys = parse_file(INPUT_FILE_PATH)
 
     monkeys_inspect_item_count = [0 for _ in range(len(monkeys))]
 
@@ -56,7 +53,9 @@ def get_new_worry_level(item, operation):
     new = eval(operation)
     return new % LCM
 
-def parse_file(file): # bad function
+def parse_file(path): # bad function
+    with open(path, 'r') as f:
+        file = f.read().strip()
     monkeys = file.split('\n\n')
     monkey_obj_list = []
     for monkey in monkeys:
