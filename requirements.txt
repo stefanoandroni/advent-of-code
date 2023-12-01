@@ -1,2 +1,3 @@
 numpy
-simpy # day 21
+simpy # 2022/21
+regex # 2023/1
