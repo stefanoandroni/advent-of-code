@@ -12,6 +12,8 @@
   <li><a href="/2022">2022</a> - [Python] - 50/50 stars <br>
       <em>(first AOC, learning python)</em>
   </li>
+    <li><a href="/2023">2023</a> - [Python] - 2/2 stars <br>
+  </li>
 </ul>
 
 <em> <b>Notes</b> Input puzzles are not shared (only example puzzle 'test-input.txt') </em>
