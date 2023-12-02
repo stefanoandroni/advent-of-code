@@ -2,17 +2,20 @@ import re
 
 # [R, G, B]
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = 'data/test-input.txt'
 RGB_CONSTRAINT = [12, 13, 14]
 
 def main():
     G = parse_input_file() # G[i] = [r,g,b] array that contains max r,g,b vals for (i+1)-game
     
-    # Calculate the sum of the game ids that are possible
-    out = sum(i + 1 for i, g in enumerate(G) if is_possible(g))
-
     # Part 1
+    out = sum(i + 1 for i, g in enumerate(G) if is_possible(g))
     print(out)
+
+    # Part 2
+    out = sum(g[0]*g[1]*g[2] for g in G)
+    print(out)
+
 
 def is_possible(game) -> bool: 
     for i in range(3): 
