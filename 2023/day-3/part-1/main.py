@@ -10,7 +10,7 @@ def main():
     # S: (symbols) list of (x,y) where (x,y) are the coordinates of a symbol
     L, N, S = parse_input_file() 
 
-    NAS = get_numbers_adjacent_to_symbol(N, S, L)
+    NAS = get_numbers_adjacent_to_symbol(N, S)
 
     # Part 1
     print(sum(NAS))
