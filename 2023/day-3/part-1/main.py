@@ -1,5 +1,5 @@
 
-INPUT_FILE_PATH = '../data/test-input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 # COORDINATES: adjacent delta coordinates
 COORDINATES = [(1, 0), (0, 1), (-1, 0), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)] 
@@ -16,12 +16,7 @@ def main():
     print(sum(NAS))
 
 def get_numbers_adjacent_to_symbol(N, S):
-    out = []
-    for number in N:
-        if is_adjacent_to_symbol(number, S):
-            n, _ = number
-            out.append(n)
-    return out
+    return [number[0] for number in N if is_adjacent_to_symbol(number, S)]
 
 def is_adjacent_to_symbol(number, S):
     n, coord  = number
