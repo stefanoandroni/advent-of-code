@@ -6,7 +6,7 @@ COORDINATES = [(1, 0), (0, 1), (-1, 0), (0, -1), (1, 1), (-1, -1), (1, -1), (-1,
 
 def main():
     # L: square matrix's dimension (LxL)
-    # N: (numbers) list of (number, (x,y)) where (x,y) are the coordinates of of the leftmost digit of the number
+    # N: (numbers) list of (number, (x,y)) where (x,y) are the coordinates of the leftmost digit of the number
     # A: (asterisks) list of (x,y) where (x,y) are the coordinates of an asterisk
     L, N, A = parse_input_file() 
 
