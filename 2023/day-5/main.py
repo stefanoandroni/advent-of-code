@@ -13,12 +13,27 @@ def main():
     # P: (paths) list of paths; P[i] is a list that represents the path for i-seed; P[i][0] is the seed, P[i][-1] is the location
     P = get_paths(S, M) 
 
+    # Part 1
+    print(min(path[-1] for path in P))
 
-    # ? = the lowest location number
 
-
-def get_paths(S, M):
-    pass
+def get_paths(seeds, mappings):
+    paths = []
+    for seed in seeds:
+        path = [seed]
+        for mapping_group in mappings:
+            # Find mapping destination
+            current_map_source = path[-1]
+            current_map_dest = None
+            for mapping in mapping_group:
+                s, d, r = mapping # s: source_range_start; d: destination_range_start; r: range
+                if s <= current_map_source <= s + r - 1:
+                    current_map_dest = d + abs(current_map_source - s) # HREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+                    break # NOTE: bad
+            path.append(current_map_dest or current_map_source) # current_map_dest if current_map_dest else current_map_source) 
+        paths.append(path)
+                
+    return paths
 
 def parse_input_file():
     with open(INPUT_FILE_PATH, 'r') as f:
