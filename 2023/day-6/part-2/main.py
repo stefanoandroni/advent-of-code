@@ -19,6 +19,7 @@ def get_number_of_winning_ways(total_time, distance_record):
 
     solutions = []
     
+    # TODO: optimization (constraint on t | d > distance_record)
     for t in range(total_time + 1):
         d = t * (total_time - t)
         if d > distance_record:
