@@ -20,8 +20,11 @@ def get_number_of_winning_ways(total_time, distance_record):
     # PROBLEM
     # d = t (total_time - t)
     # 0 <= t <= total_time
-    # d >= distance_record
+    # d > distance_record
     # t, d ∈ N
+
+    # graph (time=7, distance=9): https://imgbb.com/YTnY9vy
+
 
     '''
     # Sol1 - - - - - - - - - - 
@@ -39,6 +42,8 @@ def get_number_of_winning_ways(total_time, distance_record):
     # Sol2 - - - - - - - - - -
     solutions = []
     
+    # intersection between 'd = distance_record' and 'd = t (total_time - t)'
+    # distance_record = t (total_time - t)
     t = symbols('t')
     equation = Eq(distance_record, t * (total_time - t))
     solutions = solve(equation, t)
