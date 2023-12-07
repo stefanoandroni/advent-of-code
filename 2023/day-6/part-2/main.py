@@ -4,7 +4,7 @@ import re
 
 from sympy import Eq, solve, symbols
 
-INPUT_FILE_PATH = '../data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 def main():
     T, D = parse_input_file() # T: total time, D: distance record

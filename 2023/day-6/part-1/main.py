@@ -4,7 +4,7 @@ import re
 
 from sympy import Eq, solve, symbols
 
-INPUT_FILE_PATH = '../data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 def main():
     D = parse_input_file() # D: (data) list of tuples (total_time, distance_record)
