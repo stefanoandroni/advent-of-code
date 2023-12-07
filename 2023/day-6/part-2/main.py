@@ -1,7 +1,10 @@
 
+import math
 import re
 
-INPUT_FILE_PATH = '../data/test-input.txt'
+from sympy import Eq, solve, symbols
+
+INPUT_FILE_PATH = '../data/input.txt'
 
 def main():
     T, D = parse_input_file() # T: total time, D: distance record
@@ -17,6 +20,7 @@ def get_number_of_winning_ways(total_time, distance_record):
     # d >= distance_record
     # t, d ∈ N
 
+    '''
     solutions = []
     
     # TODO: optimization (constraint on t | d > distance_record)
@@ -26,6 +30,22 @@ def get_number_of_winning_ways(total_time, distance_record):
             solutions.append((d, t))
 
     return len(solutions)
+    '''
+
+    # Sol2 - - - - - - - - - -
+    solutions = []
+    
+    t = symbols('t')
+    equation = Eq(distance_record, t * (total_time - t))
+    solutions = solve(equation, t)
+
+    t1 = float(solutions[0])
+    t2 = float(solutions[1])
+
+    t1 = math.floor(t1)
+    t2 = math.floor(t2) if not t2.is_integer() else math.floor(t2) - 1
+
+    return t2 - t1
 
 def parse_input_file():
     with open(INPUT_FILE_PATH, 'r') as f:
