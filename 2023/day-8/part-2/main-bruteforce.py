@@ -1,10 +1,10 @@
 
 import re
 
-INPUT_FILE_PATH = '../data/test-input-1-1.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
-ROOT_NODE = 'AAA'
-DEST_NODE = 'ZZZ'
+ROOT_NODE_END = 'A'
+DEST_NODE_END = 'Z'
 
 LEFT = 'L'
 RIGHT = 'R'
@@ -16,22 +16,26 @@ def main():
     # N: (nodes) dict of key=node value=(left_child_node, right_child_node)
     I, N = parse_input_file() 
     
-    current_node = ROOT_NODE
-    steps = 0
-    while(current_node != DEST_NODE):
-        steps += 1
-        current_node = get_next_node(current_node)
+    current_nodes = get_root_nodes()
 
-    # Part 1
+    steps = 0
+    while(not all(current_node.endswith(DEST_NODE_END) for current_node in current_nodes)):
+        steps += 1
+
+        next_move = I.pop(0)
+        I.append(next_move)
+
+        current_nodes = [get_next_node(current_node, next_move) for current_node in current_nodes]
+
+    # Part 2
     print(steps)
 
+def get_root_nodes():
+    return [node for node in N.keys() if node.endswith(ROOT_NODE_END)]
 
-def get_next_node(current_node):
-    next_move = I.pop(0)
-    I.append(next_move)
 
+def get_next_node(current_node, next_move):
     index = 0 if next_move == LEFT else 1
-
     return N[current_node][index]
 
 
@@ -44,7 +48,7 @@ def parse_input_file():
     match = re.match(regex, first_line)
     instructions = list(match[0])
 
-    regex = re.compile('([a-zA-Z]{3})\s=\s\(([a-zA-Z]{3}), ([a-zA-Z]{3})\)')
+    regex = re.compile('(\w{3})\s=\s\((\w{3}), (\w{3})\)')
     matches = re.findall(regex, file)
 
     nodes = {}
