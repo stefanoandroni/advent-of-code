@@ -7,21 +7,12 @@ INPUT_FILE_PATH = 'data/test-input.txt'
 def main():
     H = parse_input_file() # H: H[i] = history list for i-value
 
-    # Part 1
-    sum = 0
-    for h in H:
-        sum += predict_value(h)
-    
-    print(sum)
+    # Part 1   
+    print(sum(predict_value(h) for h in H))
 
     # Part 2
-    sum = 0
-    for h in H:
-        h.reverse()
-        sum += predict_value(h)
+    print(sum(predict_value(h[::-1]) for h in H)) # h[::-1] -> h reversed
     
-    print(sum)
-
 def predict_value(h):
     # Base Case
     if all(x == 0 for x in h):
