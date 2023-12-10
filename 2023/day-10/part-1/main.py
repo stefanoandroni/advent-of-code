@@ -2,7 +2,7 @@
 import math
 
 
-INPUT_FILE_PATH = 'data/test-input.txt'
+INPUT_FILE_PATH = '../data/test-input-1-1.txt'
 
 DIR_TO_COORDS = {
     'N': (0, -1),
