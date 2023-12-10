@@ -37,13 +37,12 @@ def main():
     current_cell = cell1 # or cell2
 
     visited_cells.append(S)
-    visited_cells.append(cell1)
 
     path_length = 1 # S -> cell1
     
     while current_cell != None:
-        current_cell = get_next_cell(current_cell)
         visited_cells.append(current_cell)
+        current_cell = get_next_cell(current_cell)
         path_length += 1
 
     # Part 1
