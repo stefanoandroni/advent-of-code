@@ -25,44 +25,42 @@ GROUND = '.'
 
 
 def main():
-    global M, visited_cells
+    global M, boundary_cells
     # S: (start) coordinates (x,y) of starting cell
     # M: (matrix) where M[y][x] ∈ {S,.,NS,EW,NE,NW,SW,SE}
     S, M = parse_input_file() 
-    visited_cells = []
+    boundary_cells = []
 
-    # Part 1
+    # Get boundary_cells
     xs, ys = S
     cell1, cell2 = get_starting_cells(xs, ys)
 
     current_cell = cell1 # or cell2
 
-    visited_cells.append(S)
+    boundary_cells.append(S)
 
     path_length = 1 # S -> cell1
     
     while current_cell != None:
-        visited_cells.append(current_cell)
+        boundary_cells.append(current_cell)
         current_cell = get_next_cell(current_cell)
         path_length += 1
 
-    print(math.ceil(path_length / 2))
-    
     # Part 2
     # Pick's theorem 
     # i = A - b / 2 + 1 where i is the number of integer points interior to the polygon
     # A: with Shoelace theorem
-    # b: len(visited_cells)
-    print(int(get_shoelace_area(visited_cells) - len(visited_cells) / 2 + 1))
-
+    # b: len(boundary_cells)
+    print(int(get_shoelace_area(boundary_cells) - len(boundary_cells) / 2 + 1))
 
 
 def get_next_cell(current_cell):
     x, y = current_cell
     coords = get_coords_from_dirs(M[y][x])
-    next_cell = [(x + xc, y + yc) for xc, yc in coords if (x + xc, y + yc) not in visited_cells]
+    next_cell = [(x + xc, y + yc) for xc, yc in coords if (x + xc, y + yc) not in boundary_cells]
     # assert: 0 <= len(candidate_cells) <= 1 
     return next_cell[0] if len(next_cell) > 0 else None # else: next cell is S
+
 
 def get_coords_from_dirs(dirs):
     return [DIR_TO_COORDS[dir] for dir in dirs]

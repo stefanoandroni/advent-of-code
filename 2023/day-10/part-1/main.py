@@ -57,6 +57,7 @@ def get_next_cell(current_cell):
     # assert: 0 <= len(candidate_cells) <= 1 
     return next_cell[0] if len(next_cell) > 0 else None # else: next cell is S
 
+
 def get_coords_from_dirs(dirs):
     return [DIR_TO_COORDS[dir] for dir in dirs]
 
