@@ -24,7 +24,7 @@ GROUND = '.'
 def main():
     global M, visited_cells
     # S: (start) coordinates (x,y) of starting cell
-    # M: (matrix) where M[x][y] ∈ {S,.,NS,EW,NE,NW,SW,SE}
+    # M: (matrix) where M[y][x] ∈ {S,.,NS,EW,NE,NW,SW,SE}
     S, M = parse_input_file() 
     visited_cells = []
 
@@ -53,6 +53,7 @@ def get_next_cell(current_cell):
     x, y = current_cell
     coords = get_coords_from_dirs(M[y][x])
     candidate_cells = [(x + xc, y + yc) for xc, yc in coords if (x + xc, y + yc) not in visited_cells]
+    # assert: 0 <= len(candidate_cells) <= 1 
     return candidate_cells[0] if len(candidate_cells) > 0 else visited_cells[-1] # else: path2 ends up in cell1 (cell1 = visited_cells[-1])
 
 
@@ -67,6 +68,7 @@ def get_starting_cells(xs, ys):
         for x, y  in get_coords_from_dirs(M[yds][xds]):
             if (xds+x, yds+y) == (xs, ys):
                 starting_cells.add((xds, yds))
+    # assert: len(starting_cells) == 2 
     return starting_cells
 
 
