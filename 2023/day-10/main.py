@@ -1,7 +1,4 @@
 
-from enum import Enum
-
-
 INPUT_FILE_PATH = 'data/input.txt'
 
 DIR_TO_COORDS = {
@@ -25,14 +22,13 @@ GROUND = '.'
 
 def main():
     global M, visited_cells
-    # S: (start) coordinates (x,y) of starting tile
+    # S: (start) coordinates (x,y) of starting cell
     # M: (matrix) where M[x][y] ∈ {S,.,NS,EW,NE,NW,SW,SE}
     S, M = parse_input_file() 
     visited_cells = []
 
     xs, ys = S
-    # M[xs][ys] = get_compatible_shape(xs, ys)
-    cell1, cell2 = get_starting_points(xs, ys)
+    cell1, cell2 = get_starting_cells(xs, ys)
 
     visited_cells.append(S)
     visited_cells.append(cell1)
@@ -42,40 +38,33 @@ def main():
     while cell1 != cell2:
         cell1 = get_next(cell1)
         visited_cells.append(cell1)
+
         cell2 = get_next(cell2)
         visited_cells.append(cell2)
-        path_length += 1
-        #print(path_length)
 
+        path_length += 1
+
+    # Part 1
     print(path_length)
     
-    
-    #print(S)
-    #print(M)
+
 def get_next(cell):
     x, y = cell
     coords = get_coords_from_dirs(M[y][x])
-    candidate_cells = [(x+xc, y+yc) for xc, yc in coords]
-    candidate_cells = [(x, y) for x, y in candidate_cells if (x,y) not in visited_cells]
-    #print(candidate_cells, visited_cells, cell)
-    return candidate_cells[0] if len(candidate_cells) > 0 else visited_cells[-1]
+    candidate_cells = [(x + xc, y + yc) for xc, yc in coords if (x + xc, y + yc) not in visited_cells]
+    return candidate_cells[0] if len(candidate_cells) > 0 else visited_cells[-1] # else: path2 ends up in cell1 (cell1 = visited_cells[-1])
 
 
 def get_coords_from_dirs(dirs):
     return [DIR_TO_COORDS[dir] for dir in dirs]
 
-def get_starting_points(xs, ys):
+def get_starting_cells(xs, ys):
     starting_points = set()
     for xd, yd in DIR_TO_COORDS.values():
         xds, yds = xs + xd, ys + yd
-        # CHECK LIMITS!!        
-        #print("S", xs, ys, "DIR", xd, yd, "SUM", xds, yds )
         for x, y  in get_coords_from_dirs(M[yds][xds]):
             if (xds+x, yds+y) == (xs, ys):
                 starting_points.add((xds, yds))
-        
-    #print("M",M[xs + xd][ys + ys])
-    # return '0'
     return starting_points
 
 
