@@ -20,6 +20,7 @@ SYMBOL_TO_DIRS = {
 START = 'S'
 GROUND = '.'
 
+
 def main():
     global M, visited_cells
     # S: (start) coordinates (x,y) of starting cell
@@ -36,10 +37,10 @@ def main():
 
     path_length = 1
     while cell1 != cell2:
-        cell1 = get_next(cell1)
+        cell1 = get_next_cell(cell1)
         visited_cells.append(cell1)
 
-        cell2 = get_next(cell2)
+        cell2 = get_next_cell(cell2)
         visited_cells.append(cell2)
 
         path_length += 1
@@ -48,8 +49,8 @@ def main():
     print(path_length)
     
 
-def get_next(cell):
-    x, y = cell
+def get_next_cell(current_cell):
+    x, y = current_cell
     coords = get_coords_from_dirs(M[y][x])
     candidate_cells = [(x + xc, y + yc) for xc, yc in coords if (x + xc, y + yc) not in visited_cells]
     return candidate_cells[0] if len(candidate_cells) > 0 else visited_cells[-1] # else: path2 ends up in cell1 (cell1 = visited_cells[-1])
@@ -58,14 +59,15 @@ def get_next(cell):
 def get_coords_from_dirs(dirs):
     return [DIR_TO_COORDS[dir] for dir in dirs]
 
+
 def get_starting_cells(xs, ys):
-    starting_points = set()
+    starting_cells = set()
     for xd, yd in DIR_TO_COORDS.values():
         xds, yds = xs + xd, ys + yd
         for x, y  in get_coords_from_dirs(M[yds][xds]):
             if (xds+x, yds+y) == (xs, ys):
-                starting_points.add((xds, yds))
-    return starting_points
+                starting_cells.add((xds, yds))
+    return starting_cells
 
 
 def parse_input_file():
@@ -86,6 +88,7 @@ def parse_input_file():
         matrix.append(l)
 
     return start, matrix
+
 
 if __name__ == "__main__":
     main()
