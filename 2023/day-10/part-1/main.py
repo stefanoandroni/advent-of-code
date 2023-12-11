@@ -32,14 +32,12 @@ def main():
     visited_cells = []
 
     xs, ys = S
-    cell1, cell2 = get_starting_cells(xs, ys)
-
-    current_cell = cell1 # or cell2
-
     visited_cells.append(S)
 
+    cell1, cell2 = get_starting_cells(xs, ys)
+    current_cell = cell1 # or cell2
+
     path_length = 1 # S -> cell1
-    
     while current_cell != None:
         visited_cells.append(current_cell)
         current_cell = get_next_cell(current_cell)

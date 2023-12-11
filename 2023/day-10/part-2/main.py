@@ -33,14 +33,12 @@ def main():
 
     # Get boundary_cells
     xs, ys = S
+    boundary_cells.append(S)
+    
     cell1, cell2 = get_starting_cells(xs, ys)
-
     current_cell = cell1 # or cell2
 
-    boundary_cells.append(S)
-
     path_length = 1 # S -> cell1
-    
     while current_cell != None:
         boundary_cells.append(current_cell)
         current_cell = get_next_cell(current_cell)
@@ -48,9 +46,10 @@ def main():
 
     # Part 2
     # Pick's theorem 
-    # i = A - b / 2 + 1 where i is the number of integer points interior to the polygon
-    # A: with Shoelace theorem
-    # b: len(boundary_cells)
+    #   i = A - b / 2 + 1
+    #       i: the number of integer points interior to the polygon     [?]
+    #       A: polygon's areawith                                       [with Shoelace theorem]
+    #       b: number of integer points on its boundary                 [len(boundary_cells)]
     print(int(get_shoelace_area(boundary_cells) - len(boundary_cells) / 2 + 1))
 
 
