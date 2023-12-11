@@ -2,20 +2,20 @@
 from itertools import combinations
 
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = 'data/test-input.txt'
 
 GALAXY_SYMBOL = '#'
 EMPTY_SPACE_SYMBOL = '.'
 
-EXPANSION_RATE = 1_000_000 # 2 for Part 2
+EXPANSION_RATE = 1_000_000 # 2 for Part 1
 
 
 def main():
     I = parse_input_file() # I: (image) matrix
 
-    G = get_galaxies(I) # G: list of galaxies; G[i] = (x, y) where (x, y) are the coordinates for i-galaxy
+    G = get_galaxies(I) # G: set of galaxies; a galaxy is a (x, y) tuple where x and y are the coordinates for i-galaxy
 
-    EG = get_expanded_galaxies(I, G) # EG: list of expanded galaxies; G[i] = (x, y) where (x, y) are the coordinates for i-galaxy
+    EG = get_expanded_galaxies(I, G) # EG: set of expanded galaxies
 
     galaxies_pairs = list(combinations(EG, 2))
 
@@ -23,7 +23,7 @@ def main():
     for g1, g2 in galaxies_pairs:
         sum += get_shortest_path_length(g1 ,g2)
     
-    # Part 1 / Part 2
+    # Part 1 / Part 2 (Changing EXPANSION_RATE value)
     print(sum)
 
 
@@ -37,10 +37,10 @@ def get_galaxies(matrix):
 
 
 def get_expanded_galaxies(matrix, galaxies):
-    # Empty rows
+    # Empty rows indexs
     empty_rows_indexs = [i for i, row in enumerate(matrix) if all(element == EMPTY_SPACE_SYMBOL for element in row)] 
     
-    # Empty cols
+    # Empty cols indexs
     empty_cols_indexs = []
     for col in range(len(matrix[0])):
         column_elements = [matrix[row][col] for row in range(len(matrix))]
@@ -66,7 +66,7 @@ def get_expanded_galaxies(matrix, galaxies):
 def get_shortest_path_length(galaxy1, galaxy2):
     x1, y1 = galaxy1
     x2, y2 = galaxy2
-
+    # Manhattan distance
     return abs(x2 - x1) + abs(y2 - y1)
 
 
