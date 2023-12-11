@@ -48,7 +48,7 @@ def main():
     # Pick's theorem 
     #   i = A - b / 2 + 1
     #       i: the number of integer points interior to the polygon     [?]
-    #       A: polygon's areawith                                       [with Shoelace theorem]
+    #       A: polygon's area                                       [with Shoelace theorem]
     #       b: number of integer points on its boundary                 [len(boundary_cells)]
     print(int(get_shoelace_area(boundary_cells) - len(boundary_cells) / 2 + 1))
 
