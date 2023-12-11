@@ -2,21 +2,22 @@
 from itertools import combinations
 
 
-INPUT_FILE_PATH = 'data/test-input.txt'
+INPUT_FILE_PATH = 'data/input.txt'
 
 GALAXY_SYMBOL = '#'
 EMPTY_SPACE_SYMBOL = '.'
 
-EXPANSION_RATE = 2 # 1_000_000 for Part 2
+EXPANSION_RATE = 1_000_000 # 2 for Part 2
+
 
 def main():
     I = parse_input_file() # I: (image) matrix
 
     G = get_galaxies(I) # G: list of galaxies; G[i] = (x, y) where (x, y) are the coordinates for i-galaxy
 
-    EG = get_expanded_galaxies(G) # EG: list of expanded galaxies; G[i] = (x, y) where (x, y) are the coordinates for i-galaxy
+    EG = get_expanded_galaxies(I, G) # EG: list of expanded galaxies; G[i] = (x, y) where (x, y) are the coordinates for i-galaxy
 
-    galaxies_pairs = list(combinations(G, 2))
+    galaxies_pairs = list(combinations(EG, 2))
 
     sum = 0
     for g1, g2 in galaxies_pairs:
@@ -24,6 +25,7 @@ def main():
     
     # Part 1 / Part 2
     print(sum)
+
 
 def get_galaxies(matrix):
     galaxies = set()
@@ -34,9 +36,32 @@ def get_galaxies(matrix):
     return galaxies
 
 
-def get_expanded_galaxies(galaxies):
-    return
+def get_expanded_galaxies(matrix, galaxies):
+    # Empty rows
+    empty_rows_indexs = [i for i, row in enumerate(matrix) if all(element == EMPTY_SPACE_SYMBOL for element in row)] 
     
+    # Empty cols
+    empty_cols_indexs = []
+    for col in range(len(matrix[0])):
+        column_elements = [matrix[row][col] for row in range(len(matrix))]
+        if all(element == EMPTY_SPACE_SYMBOL for element in column_elements):
+            empty_cols_indexs.append(col)
+    
+    extended_galaxies = set()
+
+    for galaxy in galaxies:
+        x, y = galaxy
+
+        nx = len([index for index in empty_cols_indexs if index < x])
+        x += (EXPANSION_RATE - 1) * nx
+
+        ny = len([index for index in empty_rows_indexs if index < y])
+        y += (EXPANSION_RATE - 1) * ny
+
+        extended_galaxies.add((x, y))
+
+    return extended_galaxies
+
 
 def get_shortest_path_length(galaxy1, galaxy2):
     x1, y1 = galaxy1
@@ -44,16 +69,15 @@ def get_shortest_path_length(galaxy1, galaxy2):
 
     return abs(x2 - x1) + abs(y2 - y1)
 
+
 def parse_input_file():
     with open(INPUT_FILE_PATH, 'r') as f:
         file = f.read()
-
     lines = file.split('\n')
-
-    # Image
     image = [list(word) for word in lines]
 
     return image
+
 
 if __name__ == "__main__":
     main()
