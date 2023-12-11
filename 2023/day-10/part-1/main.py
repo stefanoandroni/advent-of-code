@@ -53,7 +53,7 @@ def get_next_cell(current_cell):
     x, y = current_cell
     coords = get_coords_from_dirs(M[y][x])
     next_cell = [(x + xc, y + yc) for xc, yc in coords if (x + xc, y + yc) not in visited_cells]
-    # assert: 0 <= len(candidate_cells) <= 1 
+    # assert: 0 <= len(next_cell) <= 1 
     return next_cell[0] if len(next_cell) > 0 else None # else: next cell is S
 
 
