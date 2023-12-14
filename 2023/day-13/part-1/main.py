@@ -1,5 +1,6 @@
 
-INPUT_FILE_PATH = 'data/test-input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
+
 
 def main():
     # P: (patterns) list of pattern; each pattern is a list of rows;
@@ -9,8 +10,10 @@ def main():
     sum = 0
     for pattern in P:
         sum += get_score(pattern)
+        
     # Part 1
     print(sum)
+
 
 def get_score(p):
     hr_reflection_line_index = get_hr_reflection_line_index(p)
@@ -64,10 +67,6 @@ def is_hr_reflection_line(i1, i2, p) -> bool:
     return is_hr_reflection_line(i1 - 1, i2 + 1, p)
 
 
-def get_hr_candidate_reflection_lines(matrix):
-    indexs = set()
-
-
 def parse_input_file():
     with open(INPUT_FILE_PATH, 'r') as f:
         file = f.read()
@@ -76,6 +75,7 @@ def parse_input_file():
     patterns = [[list(line) for line in block.split('\n')] for block in blocks]
     
     return patterns
+
 
 if __name__ == "__main__":
     main()
