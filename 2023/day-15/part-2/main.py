@@ -11,7 +11,7 @@ REGEX = re.compile("([a-zA-Z]+)([=,-])(\d*)")
 def main():
     steps = parse_input_file()
 
-    BOXES = [OrderedDict() for _ in range(256)] # key = label, value = focal length)
+    BOXES = [OrderedDict() for _ in range(256)] # (key = label, value = focal length)
 
     for step in steps:
         label, operation, focal_length = parse_step(step)
@@ -22,10 +22,15 @@ def main():
             if label in BOXES[box]:
                 BOXES[box].pop(label)
         else: # operation == '='
-            pass
-    return
-    # Part 1
-    print(sum)
+            BOXES[box][label] = focal_length
+
+    focusing_power = 0
+    for i, box in enumerate(BOXES):
+        for index, (label, focal_length) in enumerate(box.items()):
+            focusing_power += (1 + i) * (index + 1) * int(focal_length)
+
+    # Part 2
+    print(focusing_power)
 
 
 def hash_algorithm(s):
