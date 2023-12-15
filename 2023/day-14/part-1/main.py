@@ -1,9 +1,9 @@
 
-INPUT_FILE_PATH = 'data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 
 def main():
-    global H,RR, CR
+    global H, RR, CR
     # H: platform height
     # RR: (rounded rocks) a list of (x, y) coordinates representing the positions of each rounded rock
     # CR: (cube rocks) a set of (x, y) coordinates representing the positions of each cube rock
@@ -66,7 +66,7 @@ def parse_input_file():
             elif symb == CUBE_ROCK_SYMBOL:
                 cube_rocks.add((x, y))
 
-    return len(lines),rounded_rocks, cube_rocks
+    return len(lines), rounded_rocks, cube_rocks
 
 
 if __name__ == "__main__":
