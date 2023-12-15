@@ -11,11 +11,11 @@ REGEX = re.compile("([a-zA-Z]+)([=,-])(\d*)") #
 def main():
     steps = parse_input_file()
 
-    # 1) Populate a data structure ('boxes') representing the boxes
-    # boxes: list of boxes; each box is an OrderedDict (key = label, value = focal length)
-    boxes = [OrderedDict() for _ in range(256)]
+    # 1) Populate a data structure representing the boxes
+    boxes = [OrderedDict() for _ in range(256)] # list of boxes; each box is an OrderedDict (key = label, value = focal length)
 
     for step in steps:
+        # Parsing step
         label, operation, focal_length = parse_step(step)
         # Get correct box for that step
         box = hash_algorithm(label)
@@ -24,7 +24,7 @@ def main():
             if label in boxes[box]:
                 boxes[box].pop(label)
         else: # operation == '='
-            boxes[box][label] = int(focal_length)
+            boxes[box][label] = focal_length
 
     # 2) Caclualate the total focusing power
     focusing_power = 0
@@ -52,7 +52,7 @@ def parse_step(step):
     operation = match.group(2)
     focal_length = match.group(3)
 
-    return label, operation, focal_length
+    return label, operation, int(focal_length) if focal_length else focal_length
 
 
 def parse_input_file():
