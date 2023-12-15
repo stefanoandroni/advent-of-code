@@ -1,5 +1,4 @@
 
-from collections import OrderedDict
 import re
 
 
@@ -12,7 +11,7 @@ def main():
     steps = parse_input_file()
 
     # 1) Populate a data structure representing the boxes
-    boxes = [OrderedDict() for _ in range(256)] # list of boxes; each box is an OrderedDict (key = label, value = focal length)
+    boxes = [dict() for _ in range(256)] # list of boxes; each box is a dict (key = label, value = focal length)
 
     for step in steps:
         # Parsing step
