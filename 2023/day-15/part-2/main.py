@@ -5,13 +5,15 @@ import re
 
 INPUT_FILE_PATH = '../data/test-input.txt'
 
-REGEX = re.compile("([a-zA-Z]+)([=,-])(\d*)")
+REGEX = re.compile("([a-zA-Z]+)([=,-])(\d*)") #
 
 
 def main():
     steps = parse_input_file()
 
-    BOXES = [OrderedDict() for _ in range(256)] # (key = label, value = focal length)
+    # 1) Populate a data structure ('boxes') representing the boxes
+    # boxes: list of boxes; each box is an OrderedDict (key = label, value = focal length)
+    boxes = [OrderedDict() for _ in range(256)]
 
     for step in steps:
         label, operation, focal_length = parse_step(step)
@@ -19,15 +21,16 @@ def main():
         box = hash_algorithm(label)
         # Operation
         if operation == '-':
-            if label in BOXES[box]:
-                BOXES[box].pop(label)
+            if label in boxes[box]:
+                boxes[box].pop(label)
         else: # operation == '='
-            BOXES[box][label] = focal_length
+            boxes[box][label] = int(focal_length)
 
+    # 2) Caclualate the total focusing power
     focusing_power = 0
-    for i, box in enumerate(BOXES):
+    for i, box in enumerate(boxes):
         for index, (label, focal_length) in enumerate(box.items()):
-            focusing_power += (1 + i) * (index + 1) * int(focal_length)
+            focusing_power += (1 + i) * (index + 1) * focal_length
 
     # Part 2
     print(focusing_power)
