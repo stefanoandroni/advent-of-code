@@ -2,7 +2,7 @@
 from collections import deque
 
 
-INPUT_FILE_PATH = 'data/test-input.txt'
+INPUT_FILE_PATH = 'data/input.txt'
 
 
 UP = 'up'
@@ -18,7 +18,7 @@ DIR_TO_COORD = {
 }
 
 def main():
-    global L
+    global L, visited_states
     matrix = parse_input_file() # matrix[y][x] ∈ {.,|,-,/,\}
     L = len(matrix)
 
@@ -33,7 +33,7 @@ def main():
     while queue:
         s = queue.popleft()
 
-        if (s in visited_states):
+        if (not is_valid(s)):
             continue
 
         (x, y), dir = s
@@ -42,49 +42,44 @@ def main():
 
         symbol = matrix[y][x]
 
-        candidate_states = set()
         # NOTE: bad
         match symbol:
             case '.':
-                candidate_states.add(next_state(s, dir))
+                queue.append(next_state(s, dir))
             case '\\':
                 match dir:
                     case 'down':
-                        candidate_states.add(next_state(s, RIGHT))
+                        queue.append(next_state(s, RIGHT))
                     case 'up':
-                        candidate_states.add(next_state(s, LEFT))
+                        queue.append(next_state(s, LEFT))
                     case 'left':
-                        candidate_states.add(next_state(s, UP))
+                        queue.append(next_state(s, UP))
                     case 'right':
-                        candidate_states.add(next_state(s, DOWN))
+                        queue.append(next_state(s, DOWN))
             case '/':
                 match dir:
                     case 'down':
-                        candidate_states.add(next_state(s, LEFT))
+                        queue.append(next_state(s, LEFT))
                     case 'up':
-                        candidate_states.add(next_state(s, RIGHT))
+                        queue.append(next_state(s, RIGHT))
                     case 'left':
-                        candidate_states.add(next_state(s, DOWN))
+                        queue.append(next_state(s, DOWN))
                     case 'right':
-                        candidate_states.add(next_state(s, UP))
+                        queue.append(next_state(s, UP))
             case '-':
                 match dir:
                     case 'left' | 'right':
-                        candidate_states.add(next_state(s, dir))
+                        queue.append(next_state(s, dir))
                     case 'up' | 'down':
-                        candidate_states.add(next_state(s, RIGHT))
-                        candidate_states.add(next_state(s, LEFT))
+                        queue.append(next_state(s, RIGHT))
+                        queue.append(next_state(s, LEFT))
             case '|':
                 match dir:
                     case 'up' | 'down':
-                        candidate_states.add(next_state(s, dir))
+                        queue.append(next_state(s, dir))
                     case 'left' | 'right':
-                        candidate_states.add(next_state(s, UP))
-                        candidate_states.add(next_state(s, DOWN))
-
-        for candidate_state in candidate_states:
-            if is_valid(candidate_state): # True iff in matrix limit
-                queue.append(candidate_state)
+                        queue.append(next_state(s, UP))
+                        queue.append(next_state(s, DOWN))
 
     # Part 1
     print(len(visited_tiles))
@@ -96,9 +91,14 @@ def next_state(current_state, dir):
     return ((x + xd, y + yd), dir)
 
 
-def is_valid(state):
+def is_valid(state): 
+    '''
+        returns True iff (x,y) in matrix limit && state not in visited_states
+    '''
     (x, y), _ = state
     if x < 0 or y < 0 or x >= L or y >= L:
+        return False
+    if state in visited_states:
         return False
     return True
 
