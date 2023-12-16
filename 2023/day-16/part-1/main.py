@@ -4,7 +4,6 @@ from collections import deque
 
 INPUT_FILE_PATH = 'data/input.txt'
 
-
 UP = 'up'
 DOWN = 'down'
 LEFT = 'left'
@@ -16,6 +15,7 @@ DIR_TO_COORD = {
     LEFT: (-1, 0),
     RIGHT: (1, 0)
 }
+
 
 def main():
     global L, visited_states
