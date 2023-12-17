@@ -1,9 +1,9 @@
 
 from collections import deque
 
-# NOTE: (BFS) bad sol, bad coding
+# NOTE: (BFS) bad sol (TODO: use a priority queue!!), bad coding
 
-INPUT_FILE_PATH = 'data/test-input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 def main():
     global M, L

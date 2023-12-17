@@ -1,9 +1,10 @@
 
 from heapq import heappush, heappop
 
-INPUT_FILE_PATH = 'data/test-input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
 
 DIRS = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
 def main():
     global M, L
     M, L = parse_input_file() # M: square matrix; L: square matrix side length
