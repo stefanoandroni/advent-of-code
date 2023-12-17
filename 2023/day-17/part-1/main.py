@@ -22,8 +22,8 @@ def main():
     visited = set()
 
     queue = []
-    queue.append(s1)
-    queue.append(s2)
+    heappush(queue, s1)
+    heappush(queue, s2)
 
     while queue:
         (heat_loss, (r, c), ((r_dir, c_dir), n_dir)) = s = heappop(queue)
