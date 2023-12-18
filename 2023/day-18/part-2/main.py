@@ -2,7 +2,14 @@
 import re
 
 
-INPUT_FILE_PATH = '../data/input.txt'
+INPUT_FILE_PATH = '../data/test-input.txt'
+
+HEX_TO_DIR = {
+    0: 'R',
+    1: 'D',
+    2: 'L',
+    3: 'U'
+}
 
 DIRS = {
     'U': (-1, 0),
@@ -13,44 +20,44 @@ DIRS = {
 
 
 def main():
-    DP = parse_input_file() # DP: (dig plan) list of (dir, steps, color) tuples 
+    DP = parse_input_file() # DP: (dig plan) list of (dir, steps) tuples 
 
     # vertices: list of (r,c) vertices of polygon
     # n_edge_cells: number of cells along the border of polygon
-    vertices, n_edge_cells = get_edge_cells(DP) 
+    vertices, n_edge_cells = simulate_path(DP) 
 
     # Pick's theorem 
     #   i = A - b / 2 + 1
     #       i: the number of integer points interior to the polygon     [?]
     #       A: polygon's area                                           [with Shoelace theorem]
     #       b: number of integer points on its boundary                 [n_edge_cells]
-    A = get_shoelace_area(vertices)
+    A = int(get_shoelace_area(vertices))
     b = n_edge_cells
-    interior_cells_length = int(A - b / 2 + 1)
+    interior_cells_length = A - (b // 2) + 1
     
-    # Part 1
+    # Part 2
     print(interior_cells_length + n_edge_cells)
-    
 
-def get_edge_cells(dig_plan):
 
-    current_cell = ((0, 0), None) 
+def simulate_path(dig_plan):
+
+    current_cell = (0, 0) 
     n_edge_cells = 0
     vertices = []
     
     while dig_plan:
-        dir, steps, color = dig_plan.pop(0)
-
+        dir, steps = dig_plan.pop(0)
+        
         rd, cd = DIRS[dir] # rd: row direction, cd: column direction
 
         # Update current_cell
-        ((cr, cc), _) = current_cell
-        current_cell = ((cr + rd * steps, cc + cd * steps), color)
+        cr, cc = current_cell
+        current_cell = (cr + rd * steps, cc + cd * steps)
 
         # Update n_edge_cells
         n_edge_cells += steps
 
-        vertices.append((current_cell[0][0], current_cell[0][1]))
+        vertices.append((current_cell[0], current_cell[1]))
 
     return vertices, n_edge_cells
 
@@ -71,9 +78,16 @@ def parse_input_file():
     dig_plan = []
 
     for match in matches:
-        dig_plan.append((match[0], int(match[1]), match[2]))
+        dir, steps = parse_hex(match[2])
+        dig_plan.append((dir, steps))
 
     return dig_plan
+
+
+def parse_hex(s):
+    steps = int(s[:-1], 16)
+    dir = HEX_TO_DIR[int(s[-1], 16)]
+    return dir, steps
 
 
 if __name__ == "__main__":
