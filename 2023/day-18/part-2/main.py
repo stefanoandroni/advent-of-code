@@ -4,7 +4,7 @@ import re
 
 INPUT_FILE_PATH = '../data/test-input.txt'
 
-HEX_TO_DIR = {
+INT_TO_DIR = {
     0: 'R',
     1: 'D',
     2: 'L',
@@ -86,7 +86,7 @@ def parse_input_file():
 
 def parse_hex(s):
     steps = int(s[:-1], 16)
-    dir = HEX_TO_DIR[int(s[-1], 16)]
+    dir = INT_TO_DIR[int(s[-1], 16)]
     return dir, steps
 
 
