@@ -34,9 +34,10 @@ def main():
 
 def simulate_path(dig_plan):
 
-    current_vertex = (0, 0) 
     n_edge_cells = 0
     vertices = []
+
+    current_vertex = (0, 0) 
     
     for dir, steps in dig_plan:
 
