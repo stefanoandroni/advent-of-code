@@ -38,8 +38,7 @@ def simulate_path(dig_plan):
     n_edge_cells = 0
     vertices = []
     
-    while dig_plan:
-        dir, steps = dig_plan.pop(0)
+    for dir, steps in dig_plan:
 
         rd, cd = DIRS[dir] # rd: row direction, cd: column direction
 
