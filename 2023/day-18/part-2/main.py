@@ -41,7 +41,7 @@ def main():
 
 def simulate_path(dig_plan):
 
-    current_cell = (0, 0) 
+    current_vertex = (0, 0) 
     n_edge_cells = 0
     vertices = []
     
@@ -50,14 +50,14 @@ def simulate_path(dig_plan):
         
         rd, cd = DIRS[dir] # rd: row direction, cd: column direction
 
-        # Update current_cell
-        cr, cc = current_cell
-        current_cell = (cr + rd * steps, cc + cd * steps)
+        # Update current_vertex (with next vertex)
+        (cr, cc) = current_vertex
+        current_vertex = (cr + rd * steps, cc + cd * steps)
 
         # Update n_edge_cells
         n_edge_cells += steps
 
-        vertices.append((current_cell[0], current_cell[1]))
+        vertices.append((current_vertex[0], current_vertex[1]))
 
     return vertices, n_edge_cells
 
