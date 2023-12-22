@@ -1,18 +1,20 @@
 
 from collections import deque
+import math
 import re
 
 
-INPUT_FILE_PATH = '../data/test-input-1-1.txt'
-
-T = 1000 
+INPUT_FILE_PATH = '../data/input.txt'
 
 FF = "ff" # Flip-Flop
 CJ = "cj" # Conjunction
 BC = "bc" # Broadcaster
 
+RX = "rx"
+
 LOW = "L"
 HIGH = "H"
+
 
 def main():
     # BD: (broadcaster destinations) list of destination modules names of broadcaster 
@@ -24,11 +26,29 @@ def main():
     #            most_recent_pulse_dict: dict key=source module name, value=most recent pulse received from source module (default LOW)
     BD, M = parse_input_file() 
 
-    count_pulse = [0, 0] # [LOW, HIGH] 
-    
-    for _ in range(T):
-        # Button Module -> Broadcaster Module
-        count_pulse[0] += 1
+
+    # - - - - - - - - INPUT ANALYSES  - - - - - - - - 
+    # ?: # of button presses such that rx recieve LOW
+    # - Brute-Force approach is too slow
+
+    # (1) Find input modules for RX
+    # rx_input_modules = [name for name, module in M.items() if RX in module[1]]
+    # print(rx_input_modules)
+    # NOTE: only one input modules for rx (vd)
+
+    # (2) Get module type for 'vd'
+    # print(M[rx_input_modules[0]][0])
+    # NOTE: vd is a conjunction module (sends a LOW to rx iif remembers HIGH for all inputs)
+
+    # So, new problem is to find the interval in which each input module of vd outputs a HIGH (and calculate LCM)
+    # - - - - - - - - END INPUT ANALYSES  - - - - - - - - 
+
+    # key: vd input modules names, value: length of interval in which input module of vd outputs a HIGH
+    high_interval_lengths = {name: None for name, module in M.items() if 'vd' in module[1]}
+
+    press = 0 
+    while not all(value is not None for value in high_interval_lengths.values()):
+        press += 1
 
         # state = ({LOW,HIGH}, source_module_name, destination_module_name)
         queue = deque() 
@@ -39,15 +59,16 @@ def main():
         
         while queue:
             pulse, source_module_name, destination_module_name = queue.popleft()
-
-            # Update count_pulse
-            count_pulse[pulse == HIGH] += 1 # NOTE: True = 1, False = 0 
             
             if destination_module_name not in M:
                 continue
 
             type, dests, state = destination_module = M[destination_module_name]
 
+            if destination_module_name == 'vd' and pulse == HIGH:
+                if high_interval_lengths[source_module_name] == None:
+                    high_interval_lengths[source_module_name] = press
+                    
             # Flip-Flop Module
             if type == FF:
                 is_on = state
@@ -75,8 +96,9 @@ def main():
                 else:
                     for dest in dests:
                         queue.append((HIGH, destination_module_name, dest))
-    # Part 1
-    print(count_pulse[0] * count_pulse[1])
+    # Part 2
+    print(math.lcm(*high_interval_lengths.values()))
+
 
 def parse_input_file():
     with open(INPUT_FILE_PATH, 'r') as f:

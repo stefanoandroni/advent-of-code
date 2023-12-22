@@ -12,7 +12,7 @@
   <li><a href="/2022">2022</a> - [Python] - 50/50 stars <br>
       <em>(first AOC, learning python)</em>
   </li>
-    <li><a href="/2023">2023</a> - [Python] - 36/42 stars <br>
+    <li><a href="/2023">2023</a> - [Python] - 38/44 stars <br>
   </li>
 </ul>
 
