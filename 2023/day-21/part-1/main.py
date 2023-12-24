@@ -38,9 +38,9 @@ def main():
             
 
 def is_valid(row, col):
-    if (row, col) in R:
+    if (row, col) in R: # is a rock (not a garden plot)
         return False
-    if (row < 0 or col < 0 or row >= L or col >= L):
+    if (row < 0 or col < 0 or row >= L or col >= L): # is out of map
         return False
     return True
 

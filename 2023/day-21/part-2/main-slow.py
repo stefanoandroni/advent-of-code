@@ -1,8 +1,8 @@
 
-INPUT_FILE_PATH = '../data/test-input.txt'
+INPUT_FILE_PATH = '../data/input.txt'
 
 
-STEPS = 50
+STEPS = 26501365
 
 DIRS = [
     (1, 0),
@@ -10,6 +10,7 @@ DIRS = [
     (-1, 0),
     (0, -1)
 ]
+
 
 def main():
     global R, L
@@ -20,6 +21,16 @@ def main():
     R, G, S, L = parse_input_file() 
     
     # NOTE: R << S -> use only R and L
+
+    # - - - - - - - - - INPUT ANALYSES  - - - - - - - - - 
+    # - (0, c) = '.' for any c
+    # - (L-1, c) = '.' for any c
+    # - (rs, c) = '.' for any c
+    # - (r, cs) = '.' for any r
+    # - (rs, cs) is in the center of the grid
+
+
+    # - - - - - - - - END INPUT ANALYSES  - - - - - - - - 
 
     current_positions = set()
     current_positions.add(S)
@@ -42,16 +53,10 @@ def is_in_matrix(row, col):
         return False
     return True    
 
+
 def is_garden_plot(row, col):
-    if row >= L:
-        row = row % L
-    if col >= L:
-        col = col % L
-    
-    if row < 0:
-        row = L - (abs(row) % L)
-    if col < 0:
-        col = L - (abs(col) % L)
+    row = row % L
+    col = col % L
 
     if (row, col) in R:
         return False
