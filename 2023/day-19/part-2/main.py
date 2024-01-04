@@ -24,7 +24,7 @@ def main():
     global WF
     _, WF = parse_input_file()
 
-    rages_dict_0 = {
+    ranges_dict_0 = {
         'x': (1, 4000),
         'm': (1, 4000),
         'a': (1, 4000),
@@ -32,7 +32,7 @@ def main():
     }
 
     # Part 2
-    print(get_accepted_comb_number(rages_dict_0, START_WF))
+    print(get_accepted_comb_number(ranges_dict_0, START_WF))
 
 
 def calculate_ranges_product(ranges):
