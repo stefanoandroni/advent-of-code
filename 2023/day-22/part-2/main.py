@@ -1,4 +1,7 @@
 
+from collections import deque
+
+
 INPUT_FILE_PATH = '../data/test-input.txt'
 
 def main():
@@ -33,7 +36,7 @@ def main():
                     max_z[(ix, iy)] = new_ze
     
 
-    # (2) GET THE NUMBER OF BRICKS THAT CAN BE DISINTEGRATED
+    # (2) GET THE SUM OF BRICKS THAT WOULD FALL FOR EACH DISINTEGRATED BRICK
     settled_bricks = sorted(settled_bricks, key=lambda brick: brick[0][2])
 
     supports_dict = {i: set() for i in range(len(settled_bricks))}
@@ -56,15 +59,45 @@ def main():
                     supports_dict[i_down].add(i_up)
                     supported_dict[i_up].add(i_down)
 
-    # Get the number of bricks that can be disintegrated
-    total = 0
-    for i in range(len(settled_bricks)):
-        # Check if if all the bricks it supports are supported by more than one brick
-        if all(len(supported_dict[k]) > 1 for k in supports_dict[i]):
-            total += 1
-            
-    # Part 1
-    print(total)
+    # Part 2
+    print(count_falling_bricks(settled_bricks, supports_dict, supported_dict))
+
+
+def count_falling_bricks(bricks, supports_dict, supported_dict):
+    """
+    Count the total number of falling bricks.
+
+    Args:
+    settled_bricks (list): List of settled bricks.
+    supports_dict (dict): Dictionary mapping each brick to the set of bricks it supports.
+    supported_dict (dict): Dictionary mapping each brick to the set of bricks supported by it.
+
+    Returns:
+    int: Total number of falling bricks.
+    """
+    total_sum = 0
+    
+    # Iterate over bricks
+    for i, brick in enumerate(bricks):
+        # Get bricks supported by only the current brick
+        falling_bricks_set = set(k for k in supports_dict[i] if len(supported_dict[k]) == 1)
+        # Initialize a queue with falling_bricks_set
+        queue = deque(falling_bricks_set)
+        # Initialize partial_sum with the length of falling_bricks_set
+        partial_sum  = len(falling_bricks_set)
+
+        # (BFS) Find all falling bricks
+        while queue:
+            j = queue.popleft()
+            for k in supports_dict[j] - falling_bricks_set:
+                if supported_dict[k] <= falling_bricks_set:
+                    queue.append(k)
+                    if k not in falling_bricks_set:
+                        partial_sum += 1
+                        falling_bricks_set.add(k)
+        total_sum += partial_sum
+        
+    return total_sum
 
 
 def get_min_z_for_brick(brick):
