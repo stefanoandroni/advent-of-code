@@ -68,7 +68,7 @@ def count_falling_bricks(bricks, supports_dict, supported_dict):
     Count the total number of falling bricks.
 
     Args:
-    settled_bricks (list): List of settled bricks.
+    bricks (list): List of settled bricks.
     supports_dict (dict): Dictionary mapping each brick to the set of bricks it supports.
     supported_dict (dict): Dictionary mapping each brick to the set of bricks supported by it.
 
@@ -84,7 +84,7 @@ def count_falling_bricks(bricks, supports_dict, supported_dict):
         # Initialize a queue with falling_bricks_set
         queue = deque(falling_bricks_set)
         # Initialize partial_sum with the length of falling_bricks_set
-        partial_sum  = len(falling_bricks_set)
+        partial_sum = len(falling_bricks_set)
 
         # (BFS) Find all falling bricks
         while queue:
