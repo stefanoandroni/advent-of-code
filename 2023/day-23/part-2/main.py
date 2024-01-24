@@ -1,5 +1,5 @@
 
-from collections import deque
+from collections import deque, defaultdict
 
 
 INPUT_FILE_PATH = '../data/test-input.txt'
@@ -30,7 +30,7 @@ def main():
     '''
 
     # (1) Get graph
-    graph = {}
+    graph = defaultdict(lambda: defaultdict(int))
 
     # state = (current_tile:tuple, previous_node:tuple, distance_from_previous_node:int, visited_tiles:set)
     s0 = (S, S, 0, {S})
@@ -42,7 +42,7 @@ def main():
     while queue:
         current_tile, previous_node, distance_from_previous_node, visited_tiles = queue.pop()
         r, c = current_tile
-               
+
         # Get next tiles
         next_tiles = {tile for tile in get_adjacent_path_cells(r, c) if tile not in visited_tiles}
 
@@ -50,14 +50,8 @@ def main():
         if len(next_tiles) > 1 or current_tile == D:
             # print(previous_node, "to", current_tile, "in", distance_from_previous_node)
             # Update Graph
-            if previous_node not in graph:
-               graph[previous_node] = {}
-            if current_tile not in graph[previous_node]:
-                # Add weight
-                graph[previous_node][current_tile] = distance_from_previous_node
-            else:
-                # Update weight (if max)
-                graph[previous_node][current_tile] = max(graph[previous_node][current_tile], distance_from_previous_node)
+            graph[previous_node][current_tile] = max(graph[previous_node][current_tile], distance_from_previous_node)
+
             # Update State
             distance_from_previous_node = 0
             previous_node = current_tile
@@ -67,9 +61,9 @@ def main():
             queue.append((tile, previous_node, distance_from_previous_node + 1, visited_tiles | {tile}))
 
     # VISUALIZATION (https://graphonline.ru/en/create_graph_by_edge_list)
-    for source_node, dests in graph.items():
-        for dest_node, weight in dests.items():
-            print(str(source_node) + "-(" + str(weight) + ")>" + str(dest_node))
+    # for source_node, dests in graph.items():
+    #     for dest_node, weight in dests.items():
+    #         print(str(source_node) + "-(" + str(weight) + ")>" + str(dest_node))
 
     
     # (2) Find maximum weight path
