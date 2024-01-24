@@ -4,20 +4,11 @@ from collections import deque
 
 INPUT_FILE_PATH = '../data/test-input.txt'
 
+DIRS = {(0, 1), (0, -1), (-1, 0), (1, 0)}
+
 # SYMBOLS
 PATH_SYMB = "."
 FOREST_SYMB = "#"
-SLOPE_UP_SYMB = "^"
-SLOPE_DOWN_SYMB = "v"
-SLOPE_LEFT_SYMB = "<"
-SLOPE_RIGHT_SYMB = ">"
-
-DIRS = {
-    SLOPE_RIGHT_SYMB: (0, 1), 
-    SLOPE_LEFT_SYMB: (0, -1), 
-    SLOPE_UP_SYMB: (-1, 0),
-    SLOPE_DOWN_SYMB: (1, 0)
-}
 
 
 def main():
@@ -27,47 +18,106 @@ def main():
     # D: (r, c) of destination tile
     M, S, D = parse_input_file() 
 
-    # dist_map: max distance from source map
-    dist_map =  [[0 for _ in range(len(M[0]))] for _ in range(len(M))] #[[None if element == '#' else 0 for element in row] for row in M]
+    '''
+    GRAPH
+        G = (V, E)
+        V = split nodes (tiles that offer alternative paths)
+        E = v1 x v2 -> weight (weight represents the length of the longest path from v1 to v2)
+        - direct graph
+    STEPS
+        (1) Get graph nodes (split nodes)
+        (2) Get graph weighted edges
+        (3) Find maximum weight path
+    '''
 
-    # state = (current_tile:tuple, distance_from_source:int, visited_tiles:set)
-    s0 = (S, 0, set())
+    # (1) Get graph nodes (split nodes)
+    split_nodes = set()
+    for r, row in enumerate(M):
+        for c, symb in enumerate(row):
+            if M[r][c] != FOREST_SYMB:
+                if len(get_adjacent_path_cells(r, c)) > 2:
+                    split_nodes.add((r, c))
+    split_nodes.add(D)
+
+    # (2) Get graph weighted edges
+    graph = {}
+
+    # state = (current_tile:tuple, distance_from_source:int, visited_tiles:set, previous_node:tuple)
+    s0 = (S, 0, set(), S)
 
     queue = deque()
     queue.append(s0)
 
+    # TODO: OPT
     while queue:
-        current_tile, distance_from_source, visited_tiles = queue.pop()
+        current_tile, distance_from_previous_node, visited_tiles, previous_node = queue.pop()
+
+        # Check if current tile is a graph node (a split node)
+        if current_tile in split_nodes:
+            # print(previous_node, "to", current_tile, "in", distance_from_previous_node)
+            # Update Graph
+            if previous_node not in graph:
+               graph[previous_node] = {}
+            if current_tile not in graph[previous_node]:
+                # Add weight
+                graph[previous_node][current_tile] = distance_from_previous_node
+            else:
+                # Update weight (if max)
+                graph[previous_node][current_tile] = max(graph[previous_node][current_tile], distance_from_previous_node)
+            # Update State
+            distance_from_previous_node = 0
+            previous_node = current_tile
+
         r, c = current_tile
-        
-        # Update dist_map
-        if dist_map[r][c] < distance_from_source + 1:
-           dist_map[r][c] = distance_from_source
-        #else:
-        #   continue
-        
+               
         # Get next tiles
-        next_tiles = get_next_tiles(current_tile, visited_tiles)
+        next_tiles = {tile for tile in get_adjacent_path_cells(r, c) if tile not in visited_tiles}
 
         # Append new states to queue
         for tile in next_tiles:
-            queue.append((tile, distance_from_source + 1, visited_tiles | {tile}))
+            queue.append((tile, distance_from_previous_node + 1, visited_tiles | {tile}, previous_node))
 
-    # Part 2
-    print(dist_map[D[0]][D[1]])
+    # VISUALIZATION (https://graphonline.ru/en/create_graph_by_edge_list)
+    # for source_node, dests in graph.items():
+    #     for dest_node, weight in dests.items():
+    #         print(str(source_node) + "-(" + str(weight) + ")>" + str(dest_node))
+            
+    # (3) Find maximum weight path
+    print(max_weight_path(graph, S, D))
 
 
-def get_next_tiles(current_tile, visited_tiles):
-    r, c = current_tile
-    next_tiles = set()
+def max_weight_path(graph, root_node, specific_node):
+    
+    def dfs(node, visited):
+        if node == specific_node:
+            return 0
 
-    for r_dir, c_dir in DIRS.values():
+        visited.add(node)
+        max_path_weight = float('-inf')
+
+        if node in graph:
+            for neighbor, weight in graph[node].items():
+                if neighbor not in visited:
+                    path_weight = dfs(neighbor, visited)
+                    if path_weight != float('-inf'):
+                        max_path_weight = max(max_path_weight, path_weight + weight)
+
+        visited.remove(node)
+        return max_path_weight
+
+    return dfs(root_node, set())
+
+
+def get_adjacent_path_cells(r, c):
+    adjacent_cells = set()
+
+    for r_dir, c_dir in DIRS:
         r_new, c_new = r + r_dir, c + c_dir
         if r_new >= 0 and r_new < len(M) and c_new >= 0 and c_new < len(M[0]):
             if M[r_new][c_new] != FOREST_SYMB:
-                next_tiles.add((r_new, c_new))
+                adjacent_cells.add((r_new, c_new))
     
-    return {tile for tile in next_tiles if tile not in visited_tiles}
+    return adjacent_cells
 
 
 def parse_input_file():
