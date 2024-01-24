@@ -25,35 +25,29 @@ def main():
         E = v1 x v2 -> weight (weight represents the length of the longest path from v1 to v2)
         - direct graph
     STEPS
-        (1) Get graph nodes (split nodes)
-        (2) Get graph weighted edges
-        (3) Find maximum weight path
+        (1) Get graph 
+        (2) Find maximum weight path
     '''
 
-    # (1) Get graph nodes (split nodes)
-    split_nodes = set()
-    for r, row in enumerate(M):
-        for c, symb in enumerate(row):
-            if M[r][c] != FOREST_SYMB:
-                if len(get_adjacent_path_cells(r, c)) > 2:
-                    split_nodes.add((r, c))
-    split_nodes.add(D)
-
-    # (2) Get graph weighted edges
+    # (1) Get graph
     graph = {}
 
-    # state = (current_tile:tuple, distance_from_source:int, visited_tiles:set, previous_node:tuple)
-    s0 = (S, 0, set(), S)
+    # state = (current_tile:tuple, previous_node:tuple, distance_from_previous_node:int, visited_tiles:set)
+    s0 = (S, S, 0, {S})
 
     queue = deque()
     queue.append(s0)
 
     # TODO: OPT
     while queue:
-        current_tile, distance_from_previous_node, visited_tiles, previous_node = queue.pop()
+        current_tile, previous_node, distance_from_previous_node, visited_tiles = queue.pop()
+        r, c = current_tile
+               
+        # Get next tiles
+        next_tiles = {tile for tile in get_adjacent_path_cells(r, c) if tile not in visited_tiles}
 
-        # Check if current tile is a graph node (a split node)
-        if current_tile in split_nodes:
+        # Update graph dict if current tile is a graph node (a split node) or destination node
+        if len(next_tiles) > 1 or current_tile == D:
             # print(previous_node, "to", current_tile, "in", distance_from_previous_node)
             # Update Graph
             if previous_node not in graph:
@@ -68,21 +62,17 @@ def main():
             distance_from_previous_node = 0
             previous_node = current_tile
 
-        r, c = current_tile
-               
-        # Get next tiles
-        next_tiles = {tile for tile in get_adjacent_path_cells(r, c) if tile not in visited_tiles}
-
         # Append new states to queue
         for tile in next_tiles:
-            queue.append((tile, distance_from_previous_node + 1, visited_tiles | {tile}, previous_node))
+            queue.append((tile, previous_node, distance_from_previous_node + 1, visited_tiles | {tile}))
 
     # VISUALIZATION (https://graphonline.ru/en/create_graph_by_edge_list)
-    # for source_node, dests in graph.items():
-    #     for dest_node, weight in dests.items():
-    #         print(str(source_node) + "-(" + str(weight) + ")>" + str(dest_node))
-            
-    # (3) Find maximum weight path
+    for source_node, dests in graph.items():
+        for dest_node, weight in dests.items():
+            print(str(source_node) + "-(" + str(weight) + ")>" + str(dest_node))
+
+    
+    # (2) Find maximum weight path
     print(max_weight_path(graph, S, D))
 
 
